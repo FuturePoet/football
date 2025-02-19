@@ -7,136 +7,18 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
 $profileImage = isset($_SESSION['profile_image']) ? $_SESSION['profile_image'] : 'path/to/default/image.jpg';
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Football Club - Home</title>
-    <link rel="stylesheet" type="text/css" href="home.css">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="images/logo.jpg" type="image/jpg" style="background-color:(#000000,#434343);redius:50%;">
+    <title>FSP Website</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="home.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            text-align: center;
-            font-family: Arial, sans-serif;
-        }
-        .wrapper {
-            width: 80%;
-            margin: 0 auto;
-        }
-        .header, .navigation, .main, .footer {
-            margin-bottom: 20px;
-        }
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #fff;
-            padding: 10px 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-        }
-        .header img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-        .header .username {
-            font-size: 1.5rem;
-            color: #333;
-        }
-        .logout-button {
-            background-color: #d9534f;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .logout-button:hover {
-            background-color: #c9302c;
-        }
-        .navigation ul {
-            list-style-type: none;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
-        .navigation ul li {
-            margin: 0 10px;
-        }
-        .navigation ul li a {
-            text-decoration: none;
-            color: #333;
-            font-size: 1.1rem;
-            padding: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-        .navigation ul li a:hover,
-        .navigation ul li a.active {
-            background-color: #007BFF;
-            color: #fff;
-        }
-        .content {
-            display: flex;
-            justify-content: space-between;
-        }
-        .left-sidebar {
-            width: 20%;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-        .main-content {
-            width: 75%;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-        .carousel-inner .item img {
-            margin: 0 auto;
-            transition: transform 0.5s ease-in-out;
-        }
-        .carousel-inner .item:hover img {
-            transform: scale(1.05);
-        }
-        .news ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .news ul li {
-            margin: 10px 0;
-            transition: transform 0.3s ease-in-out;
-        }
-        .news ul li:hover {
-            transform: translateX(10px);
-        }
-        .livescore, .computer-vision, .ai-in-sports, .football-game {
-            margin: 20px 0;
-        }
-        .footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #333;
-            color: #fff;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-    </style>
+    <meta name="google-site-verification" content="uU3ATrc7MD6evWJv7dRbuLE7O8wZz8n7GFiftx7F7gg" />
+   
 </head>
 <body>
     <div class="wrapper">
@@ -145,7 +27,7 @@ $profileImage = isset($_SESSION['profile_image']) ? $_SESSION['profile_image'] :
                 <img src="<?php echo htmlspecialchars($profileImage); ?>" alt="User Image" onclick="window.location.href='update_profile.php'">
                 <span class="username"><?php echo htmlspecialchars($username); ?></span>
             </div>
-            <h1 style="text-align:center;">FSP WEBSITE</h1>
+            <h1 style="text-align:center;">FSP <image src="images/logo.jpg" type="image/jpg" style="background-color:(#000000,#434343);redius:50%;">WEBSITE</h1>
             <button class="logout-button" onclick="window.location.href='logout.php'">Logout</button>
         </div>
         <div class="navigation">
@@ -159,122 +41,123 @@ $profileImage = isset($_SESSION['profile_image']) ? $_SESSION['profile_image'] :
                 <li role="presentation"><a href="contact.php">Contact Us</a></li>
             </ul>
         </div>
-        <div class="content">
-            <div class="left-sidebar">
-                <h3>Latest Football News</h3>
-                <ul>
-                    <li><a href="https://www.msn.com/en-gb/sport/football/manchester-united-injury-update-mazraoui-garnacho-diallo-ugarte-and-mainoo-latest-news-and-return-dates/ar-AA1siyNo"><b>Manchester United faces injury concerns ahead of big match.</b></a></li>
-                    <li><a href="https://www.sportskeeda.com/football/5-players-match-winning-goals-season-2021-22-salah-ronaldo#:~:text=5%20players%20with%20the%20most%20match-winning%20goals%20this,%235.%20Robert%20Lewandowski%20%7C%206%20winning%20goals%20"><b>Top 5 footballers with the most goals this season.</b></a></li>
-                    <li><a href="https://www.skysports.com/football/transfer-news"><b>Breaking: Major transfer news updates from Europe.</b></a></li>
-                    <li><a href="https://www.goal.com/en/news/real-madrid-vs-barcelona-el-clasico-preview/blt1234567890"><b>Real Madrid vs Barcelona: El Clasico Preview.</b></a></li>
-                    <li><a href="https://www.bbc.com/sport/football/teams/liverpool"><b>Liverpool's comeback victory in the Champions League.</b></a></li>
-                    <li><a href="https://www.espn.com/soccer/"><b>Top 10 goals of the season so far.</b></a></li>
-                    <li><a href="https://www.fifa.com/news"><b>FIFA announces new regulations for upcoming World Cup.</b></a></li>
-                    <li><a href="https://www.skysports.com/football/news"><b>Breaking: Major transfer news updates from Europe.</b></a></li>
-                    <li><a href="https://www.uefa.com/uefachampionsleague/news/"><b>UEFA Champions League: Latest News and Highlights.</b></a></li>
-                    <li><a href="https://www.bundesliga.com/en/bundesliga/news"><b>Bundesliga: Top Stories and Match Reports.</b></a></li>
-                    <li><a href="https://www.mlssoccer.com/news/"><b>MLS: Latest Updates and Player Transfers.</b></a></li>
-                    <li><a href="https://www.laliga.com/en-GB/news"><b>La Liga: Recent Matches and Player Performances.</b></a></li>
-                    <li><a href="https://www.premierleague.com/news"><b>Premier League: Breaking News and Analysis.</b></a></li>
-                </ul>
-            </div>
+      
+        <header class="hero">
+        <button id="darkModeToggle">🌙</button>
+        <div class="hero-text" style="text-align:left;margin-left:20px;margin-top:40px;line-height: 2;">
+            <h1>EXPLORE<br>FOOTBALL<br>WORLD</h1><br>
+            <p style="font-size:15px;">Welcome to Football Star Predictor, where AI meets football to provide valuable insights 
+                and recommendations for clubs seeking emerging talent.</p>
+        </div>
+    </header>
             <div class="main-content">
-                <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                    <ol class="carousel-indicators">
-                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                        <li data-target="#myCarousel" data-slide-to="1"></li>
-                        <li data-target="#myCarousel" data-slide-to="2"></li>
-                    </ol>
-                    
-                    <div class="carousel-inner">
-                        <div class="item active">
-                            <img src="https://th.bing.com/th/id/R.938cf4b082b8a7293c59e2fc0a487a97?rik=5ioQSyTyUSBwPA&riu=http%3a%2f%2fs1.picswalls.com%2fwallpapers%2f2014%2f07%2f25%2fawesome-football-wallpaper_041156919_96.jpg&ehk=Y7WkbzNtwzHh4%2b79xuCGzboA2Q0GhJvFcEb4RAofSOw%3d&risl=&pid=ImgRaw&r=0" alt="Football Image 1">
-                            <div class="carousel-caption">
-                                <h3>Exciting Matches</h3>
-                                <p>Experience the thrill of live football matches.</p>
-                            </div>
+                <!-- SERVICES SECTION -->
+                <section class="services">
+                    <h2 >SERVICES With Our AI Modek</h2><br>
+                    <div class="services-container">
+                        <div class="service-box">
+                            <h3>Analytics Dashboard</h3><br>
+                            <span style="text-align:left;">Gain insights into player performance, team dynamics, and match statistics with our comprehensive analytics dashboard.</span>
+                            <h4>199 US$</h4><br>
+                            <a href="subscribe.php"><button>Get Premium</button></a>
                         </div>
-                        <div class="item">
-                            <img src="https://th.bing.com/th/id/OIP.8vVGIjjTgefKtCunN_zB6wHaEJ?w=840&h=470&rs=1&pid=ImgDetMain" alt="Football Image 2">
-                            <div class="carousel-caption">
-                                <h3>Latest Updates</h3>
-                                <p>Stay updated with the latest football news.</p>
-                            </div>
+                        <div class="service-box">
+                           <h3>Injury Prediction</h3><br>
+                            <span style="text-align:left;">Utilize our AI-driven injury prediction model to minimize risks and enhance player safety by forecasting potential injuries.</span>
+                            <h4>300 US$</h4><br>
+                            <a href="subscribe.php"><button>Get Premium</button></a>
                         </div>
-                        <div class="item">
-                            <img src="https://th.bing.com/th/id/R.87b3641080b3167a1a8609491b1e0cc5?rik=6CA3yf2m79X2BQ&pid=ImgRaw&r=0" alt="Football Image 3">
-                            <div class="carousel-caption">
-                                <h3><a href="register.php">Join the Community</a></h3>
-                                <p>Connect with other football fans.</p>
+                        <div class="service-box">
+                            <h3>Talent Discovery</h3><br>
+                            <span style="text-align:left;">Discover emerging football talent with our advanced AI algorithms that analyze player performance and potential.</span>
+                            <h4>150 US$</h4><br>
+                            <a href="subscribe.php"><button>Get Premium</button></a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- EVENT DETAILS SECTION -->
+                <section class="event-details">
+                    <h2 style="font-size:45px;font-weight: bold;color:rgba(188, 42, 37, 0.72);margin-bottom: 20px;">EVENT DETAILS</h2><br>
+                    <br>
+                    <div class="event-container">
+                        <div class="event-info">
+                            <h3>AI in Football: Future of Talent Scouting</h3>
+                            <p>📅 2025-03-18</p>
+                            <p>📍 Wembley Stadium, London, UK</p>
+                            <button class="details-btn">Details</button>
+                        </div>
+                        <div class="event-image">
+                            <img src="images/aimodel.png" alt="Event Image">
+                        </div>
+                    </div>
+                </section>
+                <br>
+                <section>
+                <h2 style="font-size:45px;font-weight: bold;color:rgba(188, 42, 37, 0.72);margin-bottom: 20px;">The Future Models</h2><br>
+                <br>
+                <div class="container">
+                    <div class="card">
+                        <img src="images/flog1.png" alt="AI in Football">
+                        <div class="card-content">
+                            <h2>Maximize Player Performance: AI Insights for Football Clubs</h2><br><br>
+                            <span>When it comes to identifying future football stars and maximizing player performance, clubs are constantly on the lookout for innovative...</span>
+                            <div class="card-footer">
+                                <span>👁️ 0</span>
+                                <button class="like-btn">❤️</button>
                             </div>
                         </div>
                     </div>
-                    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-                        <span class="glyphicon glyphicon-chevron-left"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="right carousel-control" href="#myCarousel" data-slide="next">
-                        <span class="glyphicon glyphicon-chevron-right"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
+
+                    <div class="card">
+                        <img src="images/flog2.png" alt="AI in Football">
+                        <div class="card-content">
+                            <h2>Revolutionize Football Talent Scouting with AI Predictions</h2><br><br>
+                            <span>In the fast-paced world of football, staying ahead of the competition is crucial. With advancements in technology, the game is evolving...</span>
+                          <br><br>  <div class="card-footer">
+                                <span>👁️ 0</span>
+                                <button class="like-btn">❤️</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <img src="images/flog3.png" alt="AI in Football">
+                        <div class="card-content">
+                            <h2>Injury Prediction and Talent Discovery: AI in Football Analysis</h2><br><br>
+                            <span>As technology continues to revolutionize the sports industry, a groundbreaking project known as Football Star Predictor (FSP) is set to...</span>
+                            <br><br> <div class="card-footer">
+                                <span>👁️ 0</span>
+                                <button class="like-btn">❤️</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="livescore">
-                    <h2 class="text-center">Live Scores</h2>
-                    <iframe width="722" height="406" src="https://www.youtube.com/embed/7uUmZA_8x8c" title="Football Matches live scores and results" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>            
-                </div>
-                <div class="computer-vision">
-                    <h2 class="text-center">Computer Vision in Football</h2>
-                    <h3>Computer vision technology is revolutionizing the way football is analyzed and played. From tracking player movements to analyzing game strategies, computer vision provides valuable insights that help teams improve their performance.</h3>
-                    <iframe width="722" height="406" src="https://www.youtube.com/embed/kNOjNlUUrps" title="The role of AI in sports [1.19.]" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>            
-                </div>
-                <div class="ai-in-sports">
-                    <h2 class="text-center">AI in Sports</h2>
-                    <h3>Artificial Intelligence (AI) is playing an increasingly important role in sports. AI is used for player performance analysis, injury prediction, game strategy optimization, and fan engagement. The integration of AI in sports is enhancing the overall experience for players, coaches, and fans.</h3>
-                    <iframe width="722" height="406" src="https://www.youtube.com/embed/YPh3Y0F6F7Y" title="How Is Artificial Intelligence Changing Football?" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>            
-                </div>
-                <h2 class="text-center">Play a Small Football Game</h2>
-                <iframe src="https://www.crazygames.com/embed/penalty-shooters" width="722" height="406" frameborder="0" allow="gamepad *;"></iframe>
             </div>
         </div>
+        </section>
+
+        <!-- ABOUT OUR MISSION SECTION -->
+        <section class="about-mission">
+            <h2 style="font-size:45px;font-weight: bold;color:rgba(188, 42, 37, 0.72);margin-bottom: 20px;">ABOUT OUR MISSION</h2>
+            <div class="about-container">
+                <img src="images/mission.png" alt="Kids Playing Football" class="about-image">
+                <div class="about-text">
+                    <span>At Football Star Predictor, we are dedicated to revolutionizing talent scouting and player management in football. Our AI-driven platform offers talent discovery, injury prediction, analytics, educational content, and a vibrant community forum.</span>
+                    <br>
+                    <br>
+                    <br>
+                    <button class="learn-more">Learn More</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTBALL STAR PREDICTOR SECTION -->
+
         <div class="footer">
             <p>Developed by:<br>
-           Zeinab Salah | FCAI| IS</p>
+            Zeinab Salah | FCAI| IS</p>
         </div>
-    </div>
-    <script>
-        function sendMessage() {
-            var input = document.getElementById('chatbot-input');
-            var message = input.value;
-            if (message.trim() === '') return;
-
-            var messagesDiv = document.getElementById('chatbot-messages');
-            var userMessageDiv = document.createElement('div');
-            userMessageDiv.textContent = 'You: ' + message;
-            messagesDiv.appendChild(userMessageDiv);
-
-            input.value = '';
-
-            // Simulate AI response
-            setTimeout(function() {
-                var aiMessageDiv = document.createElement('div');
-                aiMessageDiv.textContent = 'AI: ' + getAIResponse(message);
-                messagesDiv.appendChild(aiMessageDiv);
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-            }, 1000);
-        }
-
-        function getAIResponse(message) {
-            // This is a placeholder function. Replace with actual API call to AI model.
-            return 'This is
-            // This is a placeholder function. Replace with actual API call to AI model.
-            return 'This is a response to "' + message + '".';
-        }
-        $(document).ready(function(){
-            $('.carousel').carousel({
-                interval: 2000 
-            });
-        });
-    </script>
+    <script src="home.js"></script>
 </body>
 </html>
