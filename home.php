@@ -21,13 +21,15 @@ $profileImage = isset($_SESSION['profile_image']) ? $_SESSION['profile_image'] :
    
 </head>
 <body>
+    
     <div class="wrapper">
         <div class="header">
+            
             <div class="header-left">
                 <img src="<?php echo htmlspecialchars($profileImage); ?>" alt="User Image" onclick="window.location.href='update_profile.php'">
                 <span class="username"><?php echo htmlspecialchars($username); ?></span>
             </div>
-            <h1 style="text-align:center;">FSP <image src="images/logo.jpg" type="image/jpg" style="background-color:(#000000,#434343);redius:50%;">WEBSITE</h1>
+            <h1 style="text-align:center;"> FSP WEBSITE</h1>
             <button class="logout-button" onclick="window.location.href='logout.php'">Logout</button>
         </div>
         <div class="navigation">
@@ -41,12 +43,12 @@ $profileImage = isset($_SESSION['profile_image']) ? $_SESSION['profile_image'] :
                 <li role="presentation"><a href="contact.php">Contact Us</a></li>
             </ul>
         </div>
-      
-        <header class="hero">
+        <header class="hero" >
         <button id="darkModeToggle">🌙</button>
         <div class="hero-text" style="text-align:left;margin-left:20px;margin-top:40px;line-height: 2;">
-            <h1>EXPLORE<br>FOOTBALL<br>WORLD</h1><br>
-            <p style="font-size:15px;">Welcome to Football Star Predictor, where AI meets football to provide valuable insights 
+            <h1 id="welcomeText">Welcome To<br>FSP <br>Website</h1><br>
+            
+            <p style="font-size:15px;"> Football Star Predictor, where AI meets football to provide valuable insights 
                 and recommendations for clubs seeking emerging talent.</p>
         </div>
     </header>

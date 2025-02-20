@@ -30,16 +30,63 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subscribe to Premium</title>
     <link rel="stylesheet" type="text/css" href="home.css">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .articles {
+            max-width: 800px;
+            margin: auto;
+            text-align: center;
+        }
+        .subtitle {
+            color: #555;
+            margin-bottom: 20px;
+        }
+        .article {
+            display: flex;
+            align-items: center;
+            background: white;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .article img {
+            width: 200px;
+            height: 150px;
+            border-radius: 8px;
+            margin-right: 15px;
+        }
+        .article-content {
+            text-align: left;
+        }
+        .date {
+            color: #777;
+            font-size: 14px;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <div class="wrapper">
@@ -85,8 +132,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="alert alert-info"><?php echo $message; ?></div>
             <?php endif; ?>
         </div>
-        
-        <div class="footer">
+    
+    
+    <div class="footer">
             <p>Developed by:<br>
            Zeinab Salah | FCAI| IS</p>
         </div>

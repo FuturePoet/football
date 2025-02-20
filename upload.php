@@ -1,110 +1,83 @@
-<?php
-// Start the session
-session_start();
-
-// Assuming you have set the username in the session after login
-$username = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
-
-// Check if the form is submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Check if a file is uploaded
-    if (isset($_FILES['video']) && $_FILES['video']['error'] == 0) {
-        // Define the upload directory
-        $uploadDir = 'uploads/';
-        // Define the upload file path
-        $uploadFile = $uploadDir . basename($_FILES['video']['name']);
-
-        // Move the uploaded file to the upload directory
-        if (move_uploaded_file($_FILES['video']['tmp_name'], $uploadFile)) {
-            // File uploaded successfully
-            $message = 'Video uploaded successfully.';
-
-            // Send the video to Roboflow
-            $apiKey = 'DNYKZgnl33b5Mmi12jfr';
-            $modelId = 'football-players-detection-3zvbc/12';
-            $uploadUrl = "https://api.roboflow.com/dataset/$modelId/upload";
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $uploadUrl);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, [
-                'api_key' => $apiKey,
-                'name' => $_FILES['video']['name'],
-                'split' => 'train',
-                'file' => new CURLFile($uploadFile)
-            ]);
-
-            $response = curl_exec($ch);
-            curl_close($ch);
-
-            if ($response) {
-                $responseData = json_decode($response, true);
-                if (isset($responseData['url'])) {
-                    $message .= ' Video sent to Roboflow successfully.';
-                    echo "<script>alert('Video uploaded and sent to Roboflow successfully.'); window.location.href='home.php';</script>";
-                    exit();
-                } else {
-                    $message .= ' Failed to get annotated video URL from Roboflow.';
-                }
-            } else {
-                $message .= ' Failed to send video to Roboflow.';
-            }
-        } else {
-            // Failed to upload file
-            $message = 'Failed to upload video.';
-        }
-    } else {
-        // No file uploaded or upload error
-        $message = 'No video uploaded or upload error.';
-    }
-}
-?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Football Club - Upload Video</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Your Football Video</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212;
+            color: white;
             text-align: center;
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            padding: 50px;
         }
-        .wrapper {
+        .container {
             width: 80%;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+            margin: auto;
         }
-        .header {
-            font-size: 2rem;
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        .section {
+            background: #1e1e1e;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.1);
             margin-bottom: 20px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .upload
+            display: inline-block;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .upload-label:hover, .upload-btn:hover {
+            background: #e63e00;
+        }
+        video {
+            margin-top: 20px;
+            width: 100%;
+            border-radius: 15px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .loading-card {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(90deg, #1e1e1e 25%, #2a2a2a 50%, #1e1e1e 75%);
+            background-size: 200% 100%;
+            border-radius: 15px;
+            animation: loadingAnimation 1.5s infinite;
+        }
+        @keyframes loadingAnimation {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
         }
         .navigation ul {
-            list-style: none;
-            padding: 0;
+            list-style-type: none;
+            padding: 10px;
+            margin: 10px;
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
+            font-weight: bold;
+            font-size:35px;
+            background-color:rgba(246, 246, 246, 0.61);
+            border-radius: 10px;
         }
         .navigation ul li {
             margin: 0 10px;
+            font-weight: bold;
         }
         .navigation ul li a {
             text-decoration: none;
-            color: #333;
+            color:rgb(10, 1, 1);
             font-size: 1.1rem;
             padding: 10px;
             border-radius: 5px;
@@ -112,64 +85,103 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         .navigation ul li a:hover,
         .navigation ul li a.active {
-            background-color: #007BFF;
-            color: #fff;
+            background: linear-gradient(135deg, #5d77c5, #ffb6a3, #0048ff);
+            color:rgb(255, 255, 255);
         }
-        .content {
-            margin-bottom: 20px;
+        h2 {
+            color: #ff4500;
+            animation: colorChange 3s infinite;
         }
-        .form-group {
-            margin-bottom: 20px;
+        @keyframes colorChange {
+            0% { color: #ff4500; }
+            50% { color: #e63e00; }
+            100% { color: #ff4500; }
         }
-        .btn-primary {
-            background-color: #007BFF;
-            border-color: #007BFF;
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
         }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
-        .footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #333;
-            color: #fff;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
+    
     </style>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="header">FOOTBALL CLUB WEBSITE</div>
+<div class="logo">FSP⚽</div>
+
+    <div class="container">
+    <h1>AI-Powered Football Analysis</h1>
         <div class="navigation">
-            <ul class="hor">
-                <li><a href="home.php">Home</a></li>
-                <li><a href="subscribe.php">Get Premium</a></li>
-                <li><a href="matches.php">Matches</a></li>
-                <li><a class="active" href="upload.php">Try our Model</a></li>
-                <li><a href="players.php">Players</a></li>
-                <li><a href="https://friendlychat-541c2.firebaseapp.com/">Fans Section</a></li>
-                <li><a href="contact.php">Contact Us</a></li>
+            <ul class="nav nav-pills">
+                <li role="presentation" class="active"><a href="home.php">Home</a></li>
+                <li role="presentation"><a href="subscribe.php">Get Premium</a></li>
+                <li role="presentation"><a href="matches.php">Matches</a></li>
+                <li role="presentation"><a href="upload.php">Try our Model</a></li>
+                <li role="presentation"><a href="players.php">Players</a></li>
+                <li role="presentation"><a href="https://friendlychat-541c2.firebaseapp.com/">Fans Section</a></li>
+                <li role="presentation"><a href="contact.php">Contact Us</a></li>
             </ul>
         </div>
-        <div class="content">
-            <h2 class="text-center">Upload Your Football Video</h2>
-            <form action="upload.php" method="post" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="video">Select video to upload:</label>
-                    <input type="file" name="video" id="video" class="form-control" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Upload Video</button>
-            </form>
-            <?php if (isset($message) && !empty($message)): ?>
-                <div class="alert alert-info"><?php echo $message; ?></div>
-            <?php endif; ?>
+        <br>
+        <br>
+        <h1>Let's take a look at some of the features:</h1><br>
+        <div class="section">
+            <h2>Player Recognition</h2>
+            <p>Identify players on the field using our advanced AI models. This feature helps in tracking player movements and analyzing their performance.</p>
+            <video src="player_recognition.mp4" controls></video>
         </div>
-        <div class="footer">
-            <p>Developed by:<br>
-           Zeinab Salah | FCAI| IS</p>
+        <div class="section">
+            <h2>Team Classification</h2>
+            <p>Our AI can classify teams based on their kits and playing styles. This feature helps in identifying teams during live matches and provides insights into their strategies.</p>
+            <video src="videos/ModelAI.mp4" controls></video>
         </div>
+        
+        <div class="section">
+            <h2>Goal Detection</h2>
+            <p>Automatically detect goals and key moments in the match. This feature ensures that you never miss a crucial moment, providing real-time updates and highlights.</p>
+            <video src="goal_detection.mp4" controls></video>
+        </div>
+        
+        <div class="section">
+            <h2>Offside Detection</h2>
+            <p>Identify offsides in real-time using advanced AI models. This feature helps referees and viewers to make accurate decisions during the game.</p>
+            <video src="offside_detection.mp4" controls></video>
+        </div>
+        
     </div>
+  
+    <p>Our AI model is constantly evolving to provide more accurate and detailed analysis of football matches. Stay tuned for more updates!</p>
+    <h1>You can also upload your own football video for analysis:</h1>          
+    <label for="video-upload" class="upload-label">Choose Video</label>
+    <input type="file" id="video-upload" accept="video/*" style="display: none;">
+    <video id="video-preview" controls style="display: none;"></video>
+    <button id="upload-btn" class="upload-btn" style="display: none;">Upload Video</button>
+    <script>
+        const fileInput = document.getElementById("video-upload");
+        const videoPreview = document.getElementById("video-preview");
+        const uploadBtn = document.getElementById("upload-btn");
+
+        fileInput.addEventListener("change", function() {
+            const file = this.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                videoPreview.src = url;
+                videoPreview.style.display = "block";
+                uploadBtn.style.display = "inline-block";
+            }
+        });
+
+        uploadBtn.addEventListener("click", function() {
+            const formData = new FormData();
+            formData.append("video", fileInput.files[0]);
+
+            fetch("https://jsonplaceholder.typicode.com/users", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => alert("Video uploaded successfully! AI Analysis will be available soon."))
+            .catch(error => alert("Error uploading video"));
+        });
+    </script>
 </body>
 </html>
+

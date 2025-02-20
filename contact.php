@@ -105,9 +105,9 @@
         <div class="navigation">
             <ul class="hor">
                 <li><a href="home.php">Home</a></li>
-                <li><a href="news.php">News</a></li>
-                <li><a href="matches.php">Matches</a></li>
-                <li><a href="history.php">History</a></li>
+                <li role="presentation"><a href="subscribe.php">Get Premium</a></li>
+                <li role="presentation"><a href="matches.php">Matches</a></li>
+                <li role="presentation"><a href="upload.php">Try our Model</a></li>
                 <li><a href="players.php">Players</a></li>
                 <li><a href="https://friendlychat-541c2.firebaseapp.com/">Fans Section</a></li>
                 <li><a href="contact.php">Contact Us</a></li>
