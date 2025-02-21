@@ -1,3 +1,5 @@
+// This comment from User Hussein_Eissa
+
 <?php
 // Start the session
 session_start();
