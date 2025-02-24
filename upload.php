@@ -216,6 +216,9 @@
         const fileInput = document.getElementById("video-upload");
         const videoPreview = document.getElementById("video-preview");
         const uploadBtn = document.getElementById("upload-btn");
+        const videopreview = document.getElementById("video-preview");
+
+        const apiUrl = "https://a955-34-127-58-246.ngrok-free.app";
 
         fileInput.addEventListener("change", function() {
             const file = this.files[0];
@@ -224,6 +227,100 @@
                 videoPreview.src = url;
                 videoPreview.style.display = "block";
                 uploadBtn.style.display = "inline-block";
+            }
+        });
+
+        async function uploadVideo (file, type) {
+            try {
+                console.log('type:', type);
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('type', type);
+                const response = await fetch(`${apiUrl}/upload`, {
+                    method: 'POST',
+                    body: formData,
+                });
+                console.log("ResUP", response);
+                if (!response.ok && response.json.error) throw new Error('Failure uploading video');
+                const data = await response.json();
+                console.log('ReturnUP: ', data);
+                const FileID = data['file_id'];
+                console.log('Uploaded File ID:', FileID);
+                getVideo(FileID);
+                // return FileID;
+            } catch (error) {
+                console.error('Error', error);
+            }
+        }
+        
+        async function getVideo (FILEID) {
+            try {
+                console.log('FileID:', FILEID);
+                const response = await fetch(`${apiUrl}/get`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Connection': 'keep-alive',
+                        'Accept': '*/*',
+                        'Accept-Encoding': 'gzip, deflate, br'
+                    },
+                    body: JSON.stringify({'file_id': FILEID}),
+                });
+                console.log("ResGET", response);
+                if (!response.ok) throw new Error('Failure Getting video');
+                const data = await response.blob();
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `annotated.mp4`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                // const videoURL = URL.createObjectURL(data);
+                console.log('ReturnGET: ', data);
+                videopreview.src = "annotated.mp4";
+                videopreview.load();
+                videopreview.play();
+                videopreview.style.display = "block";
+                console.log('Success');
+            } catch (error) {
+                console.error('Error', error);
+            }
+        }
+
+        const myModal = document.getElementById('staticBackdrop')
+        const myInput = document.getElementById('myInput')
+        const UploadedFile = document.getElementById('UploadedFile')
+        const UPBTN = document.getElementById('UPBTN')
+
+        
+        UPBTN.disabled = true;
+        const toastLiveExample = document.getElementById('liveToast')
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+        UploadedFile.addEventListener("change", function() {
+            const file = this.files[0];
+            if (file && file.name.endsWith('.mp4')) {
+                UPBTN.disabled = false;
+            } else {
+                UPBTN.disabled = true;
+                toastBootstrap.show()
+            }
+        });
+        UPBTN.addEventListener("click", async (e) => {
+            const selectedRadio = document.querySelector('input[name="btnradio"]:checked');
+            if (selectedRadio) {
+                const ModelType = selectedRadio.getAttribute('model');
+                const Video = UploadedFile.files[0];
+                toastBootstrap.hide()
+                uploadVideo(Video, ModelType);
+                // const FILEID = uploadVideo(Video, ModelType);
+                // getVideo(FileID);
+                // getVideo('2aafa96dc0');
+                // getVideo('90813a9024');
+            } else {
+                console.log('No option selected');
             }
         });
 
