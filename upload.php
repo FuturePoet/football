@@ -218,7 +218,7 @@
         const uploadBtn = document.getElementById("upload-btn");
         const videopreview = document.getElementById("video-preview");
 
-        const apiUrl = "https://a955-34-127-58-246.ngrok-free.app";
+        const apiUrl = "https://0730-34-105-44-222.ngrok-free.app";
 
         fileInput.addEventListener("change", function() {
             const file = this.files[0];
@@ -269,18 +269,9 @@
                 console.log("ResGET", response);
                 if (!response.ok) throw new Error('Failure Getting video');
                 const data = await response.blob();
-
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `annotated.mp4`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-
-                // const videoURL = URL.createObjectURL(data);
+                const videoURL = URL.createObjectURL(data);
                 console.log('ReturnGET: ', data);
-                videopreview.src = "annotated.mp4";
+                videopreview.src = videoURL;
                 videopreview.load();
                 videopreview.play();
                 videopreview.style.display = "block";
