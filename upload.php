@@ -34,7 +34,7 @@
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .upload
+        .upload {
             display: inline-block;
             font-weight: bold;
             transition: 0.3s;
@@ -85,7 +85,7 @@
         }
         .navigation ul li a:hover,
         .navigation ul li a.active {
-            background: linear-gradient(135deg, #5d77c5, #ffb6a3, #0048ff);
+            background: gray;
             color:rgb(255, 255, 255);
         }
         h2 {
@@ -105,11 +105,12 @@
     </style>
 </head>
 <body>
-<div class="logo">FSP⚽</div>
-
+<h1 style="text-align:center;">FSP WEBSITE</h1>
+<br><br>
+</div>
     <div class="container">
-    <h1>AI-Powered Football Analysis</h1>
-        <div class="navigation">
+    <h1> AI-Powered Football Match Analysis ⚽</h1>
+    <div class="navigation">
             <ul class="nav nav-pills">
                 <li role="presentation" class="active"><a href="home.php">Home</a></li>
                 <li role="presentation"><a href="subscribe.php">Get Premium</a></li>
@@ -129,20 +130,20 @@
             <video src="player_recognition.mp4" controls></video>
         </div>
         <div class="section">
-            <h2>Team Classification</h2>
+            <h2>🏆 Team Classification</h2>
             <p>Our AI can classify teams based on their kits and playing styles. This feature helps in identifying teams during live matches and provides insights into their strategies.</p>
             <video src="videos/ModelAI.mp4" controls></video>
         </div>
         
         <div class="section">
-            <h2>Goal Detection</h2>
-            <p>Automatically detect goals and key moments in the match. This feature ensures that you never miss a crucial moment, providing real-time updates and highlights.</p>
-            <video src="goal_detection.mp4" controls></video>
+        <h2> Goal Detection🥅</h2>
+        <p>Automatically detect goals and key moments in the match. This feature ensures that you never miss a crucial moment, providing real-time updates and highlights.</p>
+            <video src="images/goal.mp4" controls type="video/mp4"></video>
         </div>
         
         <div class="section">
-            <h2>Offside Detection</h2>
-            <p>Identify offsides in real-time using advanced AI models. This feature helps referees and viewers to make accurate decisions during the game.</p>
+        <h2>🚩 Offside Detection</h2>
+        <p>Identify offsides in real-time using advanced AI models. This feature helps referees and viewers to make accurate decisions during the game.</p>
             <video src="offside_detection.mp4" controls></video>
         </div>
         

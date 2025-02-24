@@ -30,6 +30,8 @@ body {
             flex-direction: column;
             text-align: center;
             font-family: Arial, sans-serif;
+            cursor: url('images/football-cursor.png'), auto; /* Custom cursor */
+            transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
 }
         
         .wrapper {
@@ -137,13 +139,14 @@ body {
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            transition: 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s; /* Add transition for animation */
             padding: 20px;
             margin-top: 40px;
             margin-bottom: 40px;
         }
         .card:hover {
             transform: translateY(-5px);
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3); /* Enhance hover effect */
         }
         .card img {
             width: 100%;
@@ -211,7 +214,11 @@ body {
             border: 1px solid black;
             width: 350px;
             text-align: center;
-
+            transition: transform 0.3s, box-shadow 0.3s; /* Add transition for animation */
+        }
+        .service-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3); /* Enhance hover effect */
         }
         .service-box h3 {
             margin-bottom: 10px;
@@ -226,13 +233,14 @@ body {
             color: rgba(188, 42, 37, 0.72);
             border: 1px solid black;
             cursor: pointer;
-            transition: 0.3s;
+            transition: background-color 0.3s, transform 0.3s; /* Add transition for animation */
             font-weight: bold;
 
         }
         .service-box button:hover {
             background: black;
             color: white;
+            transform: scale(1.05); /* Enhance hover effect */
         }
         /* EVENT DETAILS SECTION */
         .event-details {
@@ -278,10 +286,11 @@ body {
             color: white;
             border: none;
             cursor: pointer;
-            transition: 0.3s;
+            transition: background-color 0.3s, transform 0.3s; /* Add transition for animation */
         }
         .details-btn:hover {
             background: gray;
+            transform: scale(1.05); /* Enhance hover effect */
         }
         .event-image img {
             width: 500px;
@@ -321,11 +330,12 @@ body {
             border: 1px solid black;
             background: transparent;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.3s, transform 0.3s; /* Add transition for animation */
         }
         .learn-more:hover {
             background: black;
             color: white;
+            transform: scale(1.05); /* Enhance hover effect */
         }
         /* FOOTBALL STAR PREDICTOR SECTION */
         .football-star {
@@ -382,7 +392,7 @@ body {
     height: 70vh;
     background: url('images/welcome.avif') no-repeat center center/cover;
     border-radius: 10px;
-
+    animation: fadeIn 2s ease-in-out; /* Add fade-in animation */
 }
 
 .hero-text {
@@ -419,18 +429,66 @@ p {
 
 body.dark-mode {
     background: #111;
+    color: #ddd;
 }
 
+.dark-mode .header, .dark-mode .main-content, .dark-mode .footer, .dark-mode .service-box, .dark-mode .card, .dark-mode .event-details, .dark-mode .about-mission {
+    background-color: #333;
+    color: #ddd;
+}
+
+.dark-mode .navigation ul {
+    background-color: #222;
+}
+
+.dark-mode .navigation ul li a {
+    color: #ddd;
+}
+
+.dark-mode .navigation ul li a:hover,
+.dark-mode .navigation ul li a.active {
+    background: linear-gradient(135deg, #444, #666, #888);
+    color: #fff;
+}
+
+.dark-mode .details-btn, .dark-mode .learn-more, .dark-mode .service-box button {
+    background: #444;
+    color: #ddd;
+}
+
+.dark-mode .details-btn:hover, .dark-mode .learn-more:hover, .dark-mode .service-box button:hover {
+    background: #555;
+    color: #fff;
+}
 .dark-mode .hero {
     filter: brightness(0.5);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.hero-text span {
+    opacity: 0;
+    display: inline-block;
+    animation: fadeInWord 0.5s forwards;
+}
+
+@keyframes fadeInWord {
+    to {
+        opacity: 1;
+    }
 }
     </style>
 </head>
 <body>
     <div class="wrapper">
         <div class="header">
-            <h1 style="text-align:center;">FSP WEBSITE</h1>
+            <h1 style="text-align:center;">FSP WEBSITE <img src="images/logo.jpg"></h1>
             <button class="logout-button" onclick="window.location.href='Login.php'">Login</button>
+            <button id="darkModeToggle">🌙</button>
+
         </div>
         <div class="navigation">
             <ul class="nav nav-pills">
@@ -444,7 +502,6 @@ body.dark-mode {
         </div>
       
         <header class="hero">
-        <button id="darkModeToggle">🌙</button>
         <div class="hero-text" style="text-align:left;margin-left:20px;margin-top:40px;line-height: 2;">
             <h1>EXPLORE<br>FOOTBALL<br>WORLD</h1><br>
             <p style="font-size:15px;">Welcome to Football Star Predictor, where AI meets football to provide valuable insights 
@@ -453,6 +510,9 @@ body.dark-mode {
     
         </div>
     </header>
+    <br>
+        <br>
+        <br>
             <div class="main-content">
                 <!-- SERVICES SECTION -->
                 <section class="services" id="services">
@@ -478,7 +538,9 @@ body.dark-mode {
                         </div>
                     </div>
                 </section>
-
+                <br>
+        <br>
+        <br>
                 <!-- EVENT DETAILS SECTION -->
                 <section class="event-details" id="event-details">
                     <h2 style="font-size:45px;font-weight: bold;color:rgba(188, 42, 37, 0.72);margin-bottom: 20px;">EVENT DETAILS</h2><br>
@@ -539,7 +601,9 @@ body.dark-mode {
             </div>
         </div>
         </section>
-
+        <br>
+        <br>
+        <br>
         <!-- ABOUT OUR MISSION SECTION -->
         <section class="about-mission" id="about-mission">
             <h2 style="font-size:45px;font-weight: bold;color:rgba(188, 42, 37, 0.72);margin-bottom: 20px;">ABOUT OUR MISSION</h2>
@@ -554,7 +618,9 @@ body.dark-mode {
                 </div>
             </div>
         </section>
-
+        <br>
+        <br>
+        <br>
         <!-- FOOTBALL STAR PREDICTOR SECTION -->
 
         <div class="footer">
@@ -575,7 +641,12 @@ $(document).ready(function(){
 const darkModeToggle = document.getElementById('darkModeToggle');
 
 darkModeToggle.addEventListener('click', () => {
-document.body.classList.toggle('dark-mode');
+    document.body.classList.toggle('dark-mode');
+    if (document.body.classList.contains('dark-mode')) {
+        darkModeToggle.textContent = '☀️'; // Change to sun icon for light mode
+    } else {
+        darkModeToggle.textContent = '🌙'; // Change to moon icon for dark mode
+    }
 });
     </script>
 </body>

@@ -1,48 +1,84 @@
-<?php
-// Start the session
-session_start();
-
-// Assuming you have set the username and profile image in the session after login
-$username = isset($_SESSION['username']) ? $_SESSION['username'] : 'Guest';
-$profileImage = isset($_SESSION['profile_image']) ? $_SESSION['profile_image'] : 'path/to/default/image.jpg';
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Match Predictions</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Football Rankings</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- AOS (Animate On Scroll) CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    
+    <!-- Custom Styles -->
     <style>
+        :root {
+            --bg-color-light:rgb(241, 238, 238);
+            --text-color-light: #000;
+            --container-bg-light: #fff;
+            --button-bg-light: #007bff;
+
+            --bg-color-dark: #181818;
+            --text-color-dark:rgb(156, 154, 154) ;
+            --container-bg-dark: #222;
+            --button-bg-dark: #ff4500;
+        }
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
         }
-        .app-container {
-            width: 90%;
-            margin: auto;
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        .table {
+            transition: transform 0.3s ease-in-out;
         }
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border-radius: 10px 10px 0 0;
+        .table:hover {
+            transform: scale(1.02);
         }
-        .logo {
-            font-size: 24px;
+        h2, h3 {
             font-weight: bold;
         }
-    
+        .news-container {
+            margin-top: 50px;
+        }
+        .news-card {
+            transition: transform 0.3s ease-in-out;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .news-card:hover {
+            transform: scale(1.05);
+        }
+        .news-image {
+            width: 200px;
+            height: 100px;
+        }
+        wrapper {
+            width: 90%;
+            margin: 0 auto;
+        }
+        .header, .navigation, .main, .footer {
+            margin-bottom: 20px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #fff;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        .header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 10px;
+            cursor: pointer;
+        }
         .navigation ul {
             list-style-type: none;
             padding: 10px;
@@ -53,13 +89,10 @@ $profileImage = isset($_SESSION['profile_image']) ? $_SESSION['profile_image'] :
             font-size:35px;
             background-color:rgba(246, 246, 246, 0.61);
             border-radius: 10px;
-
-
         }
         .navigation ul li {
             margin: 0 10px;
             font-weight: bold;
-
         }
         .navigation ul li a {
             text-decoration: none;
@@ -71,88 +104,48 @@ $profileImage = isset($_SESSION['profile_image']) ? $_SESSION['profile_image'] :
         }
         .navigation ul li a:hover,
         .navigation ul li a.active {
-            background: linear-gradient(135deg, #5d77c5, #ffb6a3, #0048ff);
-            color:rgb(255, 255, 255);
+            background: gray;
+            color:rgb(255, 245, 245);
         }
-        .live-match, .upcoming-matches {
-            margin-top: 20px;
-        }
-        .match-card {
-            background: #fff;
-            border-radius: 10px;
+        .btn-primary {
+            width: 100%;
+            background: var(--button-bg-light);
+            border: none;
             padding: 10px;
-            text-align: center;
-            margin-top: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease-in-out;
-        }
-        .match-card img {
-            width: 50px;
-            height: 50px;
-        }
-        .match-card:hover {
-            transform: scale(1.05);
-            background:rgb(78, 182, 149);
-        }
-        .team-logos {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .team-logos img {
-            width: 80px;
-            height: 80px;
-        }
-        .score {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 0 10px;
-        }
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .section-header a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .section-header a:hover {
-            text-decoration: underline;
-        }
-        .league-selector {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .league-selector span {
-            font-size: 20px;
-            font-weight: bold;
-            color:rgb(144, 0, 255);
-        }
-        .live-match h2  {
-            font-size: 24px;
-            font-weight: bold;
-            color: red;
-        }
-        .upcoming-matches h2{
-            font-size: 24px;
-            font-weight: bold;
-            color: green;
-        }
-        .match-time {
             font-size: 18px;
-            color: #333;
         }
-        
+
+        .dark-mode {
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        .dark-mode .container {
+            background: var(--container-bg-dark);
+        }
+
+        .dark-mode .btn-primary {
+            background: var(--button-bg-dark);
+        }
+
+        #darkModeToggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <header>
-        <div class="logo">FSP⚽</div>
-        
+<div class="wrapper">
+        <div class="header">
+        <h1 data-aos="zoom-in"> Football Rankings & News🏆</h1>
+            <button id="darkModeToggle">🌙</button>
+
+        </div>
         <div class="navigation">
             <ul class="nav nav-pills">
                 <li role="presentation" class="active"><a href="home.php">Home</a></li>
@@ -164,107 +157,308 @@ $profileImage = isset($_SESSION['profile_image']) ? $_SESSION['profile_image'] :
                 <li role="presentation"><a href="contact.php">Contact Us</a></li>
             </ul>
         </div>
-         </header>
-        <section class="live-match">
-            <h2>Live Match</h2>
-            <div class="league-selector">
-                <span>Premier League</span>
+<br>
+    <!-- Rankings Section -->
+    <section id="rankings" class="container my-5" data-aos="fade-up">
+        <h2 class="text-center mb-4"> Top 10 Clubs & Players🔥</h2>
+        
+        <div class="row">
+            <!-- Top Clubs Table -->
+            <div class="col-md-6" data-aos="fade-right">
+                <h3 class="text-center text-primary"> Top 10 Clubs 🏅</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered shadow-lg">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>Club</th>
+                                <th>Points</th>
+                                <th>Goals</th>
+                            </tr>
+                        </thead>
+                        <tbody id="clubsTable"></tbody>
+                    </table>
+                </div>
             </div>
-            <div class="match-card live">
-                <p class="stadium">St James' Park - Week 13</p>
-                <div class="team-logos">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/cc/Chelsea_FC.svg/300px-Chelsea_FC.svg.png" alt="Chelsea">
-                    <div class="score"> 0 : 3 </div>
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/ac/Leicester_Tigers_logo.svg/263px-Leicester_Tigers_logo.png" alt="Leicester City">
-                </div><br>
-                <p class="match-time"> 83' 
-                </p>
+            <br><br>
+            <!-- Top Players Table -->
+            <div class="col-md-6" data-aos="fade-left">
+                <h3 class="text-center text-danger"> Top 10 Players 🌟</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered shadow-lg">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>Player</th>
+                                <th>Club</th>
+                                <th>Goals</th>
+                            </tr>
+                        </thead>
+                        <tbody id="playersTable"></tbody>
+                    </table>
+                </div>
             </div>
-        </section>
+        </div>
+    </section>
+    <br><br>
+<!-- News Section -->
+<section id="news" class="container my-5" data-aos="fade-up">
+        <h1 class="text-center text-primary mb-4"> Latest Football News📰</h1>
 
-        <section class="upcoming-matches">
-            <div class="section-header">
-                <h2>Upcoming Matches</h2>
-                <a href="#">See all</a>
-            </div>
-            
-            <div class="match-card">
-                <div class="teams">
-                <div class="team-logos">
+        <div class="row" id="newsContainer">
+            <!-- News items will be dynamically added here -->
+        </div>
+    </section>
+        <div class="row" id="newsContainer">
+            <!-- News items will be dynamically added here -->
+        </div>
+    </section>
+    <br><br>
+   <!-- Match Schedule Section -->
+<section class="container my-5" data-aos="fade-up">
+    <h1 class="text-center text-danger mb-4 fw-bold">Upcoming Matches 📅 </h1>
 
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/0c/Liverpool_FC.svg/270px-Liverpool_FC.svg.png" alt="Liverpool">
-                    <h1>    VS </h1>
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/315px-Manchester_United_FC_crest.svg.png" alt="Man United">
-                </div>
-                </div>
-                <p class="match-time">06:30 <br> 30 Dec</p>
-            </div>
-            
-            <div class="match-card">
-                <div class="teams">
-                <div class="team-logos">
-
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/f9/Swansea_City_AFC_logo.svg/285px-Swansea_City_AFC_logo.svg.png" alt="Swansea">
-                    <h1>VS</h1>
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/b/b4/Tottenham_Hotspur.svg/180px-Tottenham_Hotspur.png" alt="Tottenham">
-                </div>
-                </div>
-                <p class="match-time">06:30 <br> 30 Dec</p>
-            </div>
-            <div class="match-card">
-                <div class="teams">
-                <div class="team-logos">
-
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/53/Arsenal_FC.svg/270px-Arsenal_FC.svg.png" alt="Arsenal">
-                    <h1>VS</h1>
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c2/West_Ham_United_FC_logo.svg/263px-West_Ham_United_FC_logo.svg.png" alt="West Ham">
-                </div>
-                </div>
-                <p class="match-time">08:45 <br> 30 Dec</p>
-            </div>
-            <div class="match-card">
-                <div class="teams">
-                <div class="team-logos">
-
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/eb/Manchester_City_FC_badge.svg/300px-Manchester_City_FC_badge.svg.png" alt="Man City">
-                    <h1>VS</h1>
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7c/Everton_FC_logo.svg/300px-Everton_FC_logo.svg.png" alt="Everton">
-                </div>
-                </div>
-                <p class="match-time">11:00 <br> 30 Dec</p>
-            </div>
-            <div class="match-card">
-                <div class="teams">
-                    <div class="team-logos">
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/9/9a/Aston_Villa_FC_new_crest.svg/225px-Aston_Villa_FC_new_crest.svg.png" alt="Aston Villa">
-                    <h1>VS</h1>
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/54/Leeds_United_F.C._logo.svg/263px-Leeds_United_F.C._logo.svg.png" alt="Leeds United">
-                </div>
-                </div>
-                <p class="match-time">13:15 <br> 30 Dec</p>
-            </div>
-            <div class="match-card">
-                <div class="teams">
-                <div class="team-logos">
-
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Newcastle_United_Logo.svg/300px-Newcastle_United_Logo.svg.png" alt="Newcastle">
-                    <h1>VS</h1>
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/a2/Crystal_Palace_FC_logo_%282022%29.svg/263px-Crystal_Palace_FC_logo_%282022%29.svg.png" alt="Crystal Palace">
-                </div>
-                </div>
-                <p class="match-time">15:30 <br> 30 Dec</p>
-            </div>
-            <div class="match-card">
-                <div class="teams">
-                <div class="team-logos">
-
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d0/Brighton_and_Hove_Albion_FC_crest.svg/285px-Brighton_and_Hove_Albion_FC_crest.svg.png" alt="Brighton">
-                    <h1>VS</h1>
-                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/c/c9/Wolverhampton_Wanderers_FC_crest.svg/300px-Wolverhampton_Wanderers_FC_crest.svg.png" alt="Wolves">
-                </div>
-                </div>
-            </div>
-        </section>
+    <div class="table-responsive">
+        <table class="table table-hover text-center match-table shadow-lg rounded-3 overflow-hidden">
+            <thead class="table-danger text-white">
+                <tr>
+                    <th>Date</th>
+                    <th>Match</th>
+                    <th>Time</th>
+                    <th>Venue</th>
+                </tr>
+            </thead>
+            <tbody class="bg-light">
+                <tr>
+                    <td><strong>March 10, 2025</strong></td>
+                    <td> <span class="fw-bold">Real Madrid</span> vs <span class="fw-bold">Barcelona</span></td>
+                    <td>🕗 8:00 PM</td>
+                    <td>🏟️ Santiago Bernabéu</td>
+                </tr>
+                <tr>
+                    <td><strong>March 12, 2025</strong></td>
+                    <td> <span class="fw-bold">Manchester United</span> vs <span class="fw-bold">Liverpool</span></td>
+                    <td>🕖 7:30 PM</td>
+                    <td>🏟️ Old Trafford</td>
+                </tr>
+                <tr>
+                    <td><strong>March 14, 2025</strong></td>
+                    <td><span class="fw-bold">Bayern Munich</span> vs <span class="fw-bold">PSG</span></td>
+                    <td>🕘 9:00 PM</td>
+                    <td>🏟️ Allianz Arena</td>
+                </tr>
+                <tr>
+                    <td><strong>March 16, 2025</strong></td>
+                    <td><span class="fw-bold">Juventus</span> vs <span class="fw-bold">AC Milan</span></td>
+                    <td>🕕 6:45 PM</td>
+                    <td>🏟️ Juventus Stadium</td>
+                </tr>
+                <tr>
+                    <td><strong>March 18, 2025</strong></td>
+                    <td><span class="fw-bold">Chelsea</span> vs <span class="fw-bold">Arsenal</span></td>
+                    <td>🕖 7:00 PM</td>
+                    <td>🏟️ Stamford Bridge</td>
+                </tr>
+                <tr>
+                    <td><strong>March 20, 2025</strong></td>
+                    <td> <span class="fw-bold">Dortmund</span> vs <span class="fw-bold">Ajax</span></td>
+                    <td>🕗 8:15 PM</td>
+                    <td>🏟️ Signal Iduna Park</td>
+                </tr>
+                <tr>
+                    <td><strong>March 22, 2025</strong></td>
+                    <td><span class="fw-bold">Inter Milan</span> vs <span class="fw-bold">Napoli</span></td>
+                    <td>🕡 6:30 PM</td>
+                    <td>🏟️ San Siro</td>
+                </tr>
+                <tr>
+                    <td><strong>March 24, 2025</strong></td>
+                    <td><span class="fw-bold">Atletico Madrid</span> vs <span class="fw-bold">Sevilla</span></td>
+                    <td>🕘 9:00 PM</td>
+                    <td>🏟️ Wanda Metropolitano</td>
+                </tr>
+                <tr>
+                    <td><strong>March 26, 2025</strong></td>
+                    <td> <span class="fw-bold">Tottenham</span> vs <span class="fw-bold">West Ham</span></td>
+                    <td>🕗 8:00 PM</td>
+                    <td>🏟️ Tottenham Hotspur Stadium</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
+</section>
+<br><br>
+    <!-- Footer -->
+    <footer class="text-center py-3 bg-dark text-white">
+        <p>© 2025 Football Rankings. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Sample Data for Clubs
+        const clubs = [
+            { rank: 1, name: "Real Madrid", points: 85, goals: 72 },
+            { rank: 2, name: "Barcelona", points: 82, goals: 68 },
+            { rank: 3, name: "Manchester City", points: 79, goals: 65 },
+            { rank: 4, name: "Bayern Munich", points: 76, goals: 63 },
+            { rank: 5, name: "Liverpool", points: 74, goals: 60 },
+            { rank: 6, name: "PSG", points: 71, goals: 58 },
+            { rank: 7, name: "Juventus", points: 69, goals: 55 },
+            { rank: 8, name: "Chelsea", points: 66, goals: 52 },
+            { rank: 9, name: "AC Milan", points: 64, goals: 50 },
+            { rank: 10, name: "Dortmund", points: 61, goals: 48 },
+        ];
+
+        // Sample Data for Players
+        const players = [
+            { rank: 1, name: "Lionel Messi", club: "Inter Miami", goals: 35 },
+            { rank: 2, name: "Cristiano Ronaldo", club: "Al Nassr", goals: 33 },
+            { rank: 3, name: "Erling Haaland", club: "Man City", goals: 31 },
+            { rank: 4, name: "Kylian Mbappe", club: "PSG", goals: 30 },
+            { rank: 5, name: "Harry Kane", club: "Bayern Munich", goals: 28 },
+            { rank: 6, name: "Neymar", club: "Al Hilal", goals: 26 },
+            { rank: 7, name: "Robert Lewandowski", club: "Barcelona", goals: 25 },
+            { rank: 8, name: "Mohamed Salah", club: "Liverpool", goals: 24 },
+            { rank: 9, name: "Vinicius Jr.", club: "Real Madrid", goals: 23 },
+            { rank: 10, name: "Kevin De Bruyne", club: "Man City", goals: 22 },
+        ];
+
+        // Populate Clubs Table
+        const clubsTable = document.getElementById("clubsTable");
+        clubs.forEach(club => {
+            clubsTable.innerHTML += `
+                <tr>
+                    <td>${club.rank}</td>
+                    <td>${club.name}</td>
+                    <td>${club.points}</td>
+                    <td>${club.goals}</td>
+                </tr>
+            `;
+        });
+
+        // Populate Players Table
+        const playersTable = document.getElementById("playersTable");
+        players.forEach(player => {
+            playersTable.innerHTML += `
+                <tr>
+                    <td>${player.rank}</td>
+                    <td>${player.name}</td>
+                    <td>${player.club}</td>
+                    <td>${player.goals}</td>
+                </tr>
+            `;
+        });
+    </script>
+
+    <!-- Bootstrap & AOS JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        // News Data (Title, Image, Content, Likes, Dislikes)
+        const newsArticles = [
+            {
+                id: 1,
+                title: "Real Madrid Wins El Clásico 🏆",
+                image: "https://th.bing.com/th/id/OIP.B6e9RRTZLReHI5rdSRO70AHaEK?rs=1&pid=ImgDetMain",
+                content: "Real Madrid secured a thrilling 2-1 victory over Barcelona in the latest El Clásico match.",
+                likes: 0,
+                dislikes: 0
+            },
+            {
+                id: 2,
+                title: "Cristiano Ronaldo Breaks Goal Record ⚽",
+                image: "https://th.bing.com/th/id/OIP.YttZQCD6ur7ZtWRR48JErgHaEK?rs=1&pid=ImgDetMain",
+                content: "Cristiano Ronaldo has set a new record, becoming the highest goal scorer in football history.",
+                likes: 0,
+                dislikes: 0
+            },
+            {
+                id: 3,
+                title: "Manchester City Wins Premier League 🏅",
+                image: "https://th.bing.com/th/id/OIP.hItwUiK0LvjT6DX9QH1mNQHaE9?rs=1&pid=ImgDetMain",
+                content: "Manchester City wins their 5th Premier League title under Pep Guardiola.",
+                likes: 0,
+                dislikes: 0
+            },
+            {
+                id: 4,
+                title: "Messi Wins His 8th Ballon d'Or 🥇",
+                image: "https://th.bing.com/th/id/OIP.ecAxUZgpGW4WPnzHhm6HfgHaE8?rs=1&pid=ImgDetMain",
+                content: "Lionel Messi has secured his record-breaking 8th Ballon d'Or award.",
+                likes: 0,
+                dislikes: 0
+            },
+            {
+                id: 5,
+                title: "Liverpool Signs New Star Player 🌟",
+                image: "https://th.bing.com/th/id/OIP.6WZehY6yWiUEbPr9hw4iVwHaFl?rs=1&pid=ImgDetMain",
+                content: "Liverpool has made a major signing, bringing in a young talent for the next season.",
+                likes: 0,
+                dislikes: 0
+            }
+        ];
+
+        // Function to render news articles
+        function renderNews() {
+            const newsContainer = document.getElementById("newsContainer");
+            newsContainer.innerHTML = "";
+
+            newsArticles.forEach((news, index) => {
+                newsContainer.innerHTML += `
+                    <div class="col-md-4 mb-4" data-aos="fade-up">
+                        <div class="news-card">
+                            <img src="${news.image}" class="news-img" alt="News Image">
+                            <div class="p-3">
+                                <h4>${news.title}</h4>
+                                <p>${news.content}</p>
+                                <div>
+                                    <span class="like-btn text-success" onclick="updateReaction(${index}, 'like')">👍</span>
+                                    <span id="likes-${index}">${news.likes}</span>
+                                    <span class="dislike-btn text-danger" onclick="updateReaction(${index}, 'dislike')">👎</span>
+                                    <span id="dislikes-${index}">${news.dislikes}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Function to update likes/dislikes
+        function updateReaction(index, type) {
+            if (type === "like") {
+                newsArticles[index].likes++;
+                document.getElementById(`likes-${index}`).innerText = newsArticles[index].likes;
+            } else {
+                newsArticles[index].dislikes++;
+                document.getElementById(`dislikes-${index}`).innerText = newsArticles[index].dislikes;
+            }
+        }
+
+        // Initial render
+        renderNews();
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>AOS.init();</script>
+    <script>
+        document.querySelectorAll('.plan').forEach(plan => {
+            plan.addEventListener('click', function() {
+                document.querySelectorAll('.plan').forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('selectedPlan').value = this.getAttribute('data-plan');
+            });
+        });
+        const darkModeToggle = document.getElementById('darkModeToggle');
+
+darkModeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    if (document.body.classList.contains('dark-mode')) {
+        darkModeToggle.textContent = '☀️'; // Change to sun icon for light mode
+    } else {
+        darkModeToggle.textContent = '🌙'; // Change to moon icon for dark mode
+    }
+});
+    </script>
 </body>
 </html>
