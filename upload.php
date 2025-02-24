@@ -5,15 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Your Football Video</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <style>
+       :root {
+            --bg-color-light: #f4f4f4;
+            --text-color-light: #000;
+            --container-bg-light: #fff;
+            --button-bg-light: #007bff;
+
+            --bg-color-dark: #181818;
+            --text-color-dark:rgb(156, 154, 154) ;
+            --container-bg-dark: #222;
+            --button-bg-dark: #ff4500;
+        }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #121212;
-            color: white;
-            text-align: center;
-            padding: 50px;
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
+            font-family: Arial, sans-serif;
+            transition: all 0.3s ease;
+        }
+        .header, .navigation, .main, .footer {
+            margin-bottom: 20px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #fff;
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .container {
             width: 80%;
@@ -103,15 +123,50 @@
             font-size: 24px;
             font-weight: bold;
         }
-    
+        .dark-mode {
+            background-color: #121212;
+            color: white;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+        .section {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+        .dark-mode .section {
+            background: #1e1e1e;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.1);
+        }
+        .toggle-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #ff4500;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        .toggle-btn:hover {
+            background: #e63e00;
+        }
     </style>
 </head>
 <body>
-<h1 style="text-align:center;">FSP WEBSITE</h1>
+<button class="toggle-btn" onclick="toggleMode()">Toggle Mode</button>
 <br><br>
 </div>
     <div class="container">
-    <h1> AI-Powered Football Match Analysis ⚽</h1>
+    <h1 style="text-align:center"> AI-Powered Football Match Analysis ⚽</h1>
     <div class="navigation">
             <ul class="nav nav-pills">
                 <li role="presentation" class="active"><a href="home.php">Home</a></li>
@@ -129,12 +184,12 @@
         <div class="section">
             <h2>Player Recognition</h2>
             <p>Identify players on the field using our advanced AI models. This feature helps in tracking player movements and analyzing their performance.</p>
-            <video src="player_recognition.mp4" controls></video>
+            <video src="images/team_reg.mp4" controls></video>
         </div>
         <div class="section">
             <h2>🏆 Team Classification</h2>
             <p>Our AI can classify teams based on their kits and playing styles. This feature helps in identifying teams during live matches and provides insights into their strategies.</p>
-            <video src="videos/ModelAI.mp4" controls></video>
+            <video src="images/team_class.mp4" controls></video>
         </div>
         
         <div class="section">
@@ -150,74 +205,17 @@
         </div>
         
     </div>
-    
+  
     <p>Our AI model is constantly evolving to provide more accurate and detailed analysis of football matches. Stay tuned for more updates!</p>
-    <h1>You can also upload your own football video for analysis</h1>
-    <!-- <label for="video-upload" class="upload-label">Choose Video</label> -->
+    <h1>You can also upload your own football video for analysis:</h1>          
+    <label for="video-upload" class="upload-label">Choose Video</label>
     <input type="file" id="video-upload" accept="video/*" style="display: none;">
     <video id="video-preview" controls style="display: none;"></video>
-    <button id="upload-btn" class="upload-btn" style="display: none;">Upload Video</button> 
-
-
-    <section>
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-dark border border-primary position-fixed top-0 end-0 m-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            Try The Model
-        </button>
-
-        <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop"  data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-                <div class="modal-content bg-dark">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Try Model</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="btn-group container-fluid mb-3" role="group" aria-label="Basic radio toggle button group">
-                            <input type="radio" class="btn-check" name="btnradio" model="Players" id="btnradio1" autocomplete="off" checked>
-                            <label class="btn btn-outline-primary" for="btnradio1">Detect Players</label>
-
-                            <input type="radio" class="btn-check" name="btnradio" model="Teams" id="btnradio2" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btnradio2">Classefy Teams</label>
-
-                            <input type="radio" class="btn-check" name="btnradio" model="Offside" id="btnradio3" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btnradio3">Offside Detection</label>
-
-                            <input type="radio" class="btn-check" name="btnradio"  model="Goal" id="btnradio4" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btnradio4">Goal Detection</label>
-                        </div>
-                        <div class="input-group container-fluid">
-                            <input type="file" id="UploadedFile" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon">
-                            <div class="input-group-text" id="btnGroupAddon">.mp4</div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" id="UPBTN" class="btn btn-primary" data-bs-dismiss="modal">Upload</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="toast align-items-center text-bg-danger border-0 position-fixed bottom-0 end-0 m-3" id="liveToast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    Hello, world! This is a toast message.
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-
-    </section>
-    
+    <button id="upload-btn" class="upload-btn" style="display: none;">Upload Video</button>
     <script>
         const fileInput = document.getElementById("video-upload");
         const videoPreview = document.getElementById("video-preview");
         const uploadBtn = document.getElementById("upload-btn");
-        const videopreview = document.getElementById("video-preview");
-
-        const apiUrl = "https://0730-34-105-44-222.ngrok-free.app";
 
         fileInput.addEventListener("change", function() {
             const file = this.files[0];
@@ -226,91 +224,6 @@
                 videoPreview.src = url;
                 videoPreview.style.display = "block";
                 uploadBtn.style.display = "inline-block";
-            }
-        });
-
-        async function uploadVideo (file, type) {
-            try {
-                console.log('type:', type);
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('type', type);
-                const response = await fetch(`${apiUrl}/upload`, {
-                    method: 'POST',
-                    body: formData,
-                });
-                console.log("ResUP", response);
-                if (!response.ok && response.json.error) throw new Error('Failure uploading video');
-                const data = await response.json();
-                console.log('ReturnUP: ', data);
-                const FileID = data['file_id'];
-                console.log('Uploaded File ID:', FileID);
-                getVideo(FileID);
-                // return FileID;
-            } catch (error) {
-                console.error('Error', error);
-            }
-        }
-        
-        async function getVideo (FILEID) {
-            try {
-                console.log('FileID:', FILEID);
-                const response = await fetch(`${apiUrl}/get`, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Connection': 'keep-alive',
-                        'Accept': '*/*',
-                        'Accept-Encoding': 'gzip, deflate, br'
-                    },
-                    body: JSON.stringify({'file_id': FILEID}),
-                });
-                console.log("ResGET", response);
-                if (!response.ok) throw new Error('Failure Getting video');
-                const data = await response.blob();
-                const videoURL = URL.createObjectURL(data);
-                console.log('ReturnGET: ', data);
-                videopreview.src = videoURL;
-                videopreview.load();
-                videopreview.play();
-                videopreview.style.display = "block";
-                console.log('Success');
-            } catch (error) {
-                console.error('Error', error);
-            }
-        }
-
-        const myModal = document.getElementById('staticBackdrop')
-        const myInput = document.getElementById('myInput')
-        const UploadedFile = document.getElementById('UploadedFile')
-        const UPBTN = document.getElementById('UPBTN')
-
-        
-        UPBTN.disabled = true;
-        const toastLiveExample = document.getElementById('liveToast')
-        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
-        UploadedFile.addEventListener("change", function() {
-            const file = this.files[0];
-            if (file && file.name.endsWith('.mp4')) {
-                UPBTN.disabled = false;
-            } else {
-                UPBTN.disabled = true;
-                toastBootstrap.show()
-            }
-        });
-        UPBTN.addEventListener("click", async (e) => {
-            const selectedRadio = document.querySelector('input[name="btnradio"]:checked');
-            if (selectedRadio) {
-                const ModelType = selectedRadio.getAttribute('model');
-                const Video = UploadedFile.files[0];
-                toastBootstrap.hide()
-                uploadVideo(Video, ModelType);
-                // const FILEID = uploadVideo(Video, ModelType);
-                // getVideo(FileID);
-                // getVideo('2aafa96dc0');
-                // getVideo('90813a9024');
-            } else {
-                console.log('No option selected');
             }
         });
 
@@ -326,6 +239,16 @@
             .then(data => alert("Video uploaded successfully! AI Analysis will be available soon."))
             .catch(error => alert("Error uploading video"));
         });
+        function toggleMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('mode', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        }
+
+        window.onload = function() {
+            if (localStorage.getItem('mode') === 'light') {
+                document.body.classList.add('light-mode');
+            }
+        };
     </script>
 </body>
 </html>
