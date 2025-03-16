@@ -12,10 +12,6 @@
     <style>
         .contact-card {
             margin-bottom: 30px;
-            transition: transform 0.3s;
-        }
-        .contact-card:hover {
-            transform: translateY(-10px);
         }
         .contact-card h4 {
             margin-top: 0;
@@ -26,10 +22,17 @@
             border-radius: 50%;
             margin-bottom: 15px;
         }
+        .panel {
+            transition: transform 0.3s;
+        }
+        .panel:hover {
+            transform: translateY(-10px);
+        }
         .contact-card .panel-body {
             text-align: center;
         }
         .contact-card .panel-body p {
+            width: 100%;
             margin: 10px 0;
         }
         .contact-card .panel-body .bio {
@@ -117,7 +120,7 @@
         <div class="main dashboard">
             <h1 class="text-center color-animation">Meet Our Team</h1><br><br>
             <div class="row">
-                <div class="col-md-4 col-sm-7 contact-card">
+                <div class="col-md-4 col-sm-6 contact-card">
                     <div class="panel panel-default" style="margin-left: 30px;">
                         <div class="panel-body">
                             <img src="images\Team\zeinab.jpg" alt="Zeinab Salah">
