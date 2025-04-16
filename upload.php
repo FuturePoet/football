@@ -286,7 +286,7 @@
             <video src="images/goal.mp4" controls type="video/mp4"></video>
         </div>
         
-        <div class="section">
+        <div class="section d-none">
         <h2>🚩 Offside Detection</h2>
         <p>Identify offsides in real-time using advanced AI models. This feature helps referees and viewers to make accurate decisions during the game.</p>
             <video src="FF.mp4" controls></video>
@@ -372,7 +372,7 @@
         loading.classList.remove('d-flex');
         loading.style.display = 'none';
 
-        const apiUrl = "https://970f-34-168-232-45.ngrok-free.app";
+        const apiUrl = "https://0a82-35-230-24-214.ngrok-free.app";
 
         fileInput.addEventListener("change", function() {
             const file = this.files[0];
@@ -425,14 +425,13 @@
                 });
                 console.log("ResGET", response);
                 if (!response.ok) throw new Error('Failure Getting video');
+                
                 const data = await response.blob();
                 const videoURL = URL.createObjectURL(data);
-                console.log('ReturnGET: ', data);
-                videopreview.src = videoURL;
+                // console.log("URL: ",videoURL);
+                
                 VSec.style.display = "block";
                 videopreview.style.display = "block";
-                // videopreview.load();
-                // videopreview.play();
                 console.log('Video Fetched Successfully');
             } catch (error) {
                 console.error('Error', error);
@@ -465,10 +464,7 @@
                 const Video = UploadedFile.files[0];
                 toastBootstrap.hide()
                 uploadVideo(Video, ModelType);
-                // const FILEID = uploadVideo(Video, ModelType);
-                // getVideo(FileID);
-                // getVideo('2aafa96dc0');
-                // getVideo('90813a9024');
+                // getVideo("27005cf1da");
             } else {
                 console.log('No option selected');
             }
