@@ -313,15 +313,15 @@
         </button>
 
         <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop"  data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade  w-100" id="staticBackdrop"  data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content bg-dark">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Try Model</h1>
+                    <div class="modal-header text-white">
+                        <h4 class="modal-title fs-4" id="staticBackdropLabel">Try Model</h4>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="btn-group container-fluid mb-3" role="group" aria-label="Basic radio toggle button group">
+                        <!-- <div class="btn-group d-flex gap-0 flex-wrap container-fluid mb-3" role="group" aria-label="Basic radio toggle button group">
                             <input type="radio" class="btn-check" name="btnradio" model="Players" id="btnradio1" autocomplete="off" checked>
                             <label class="btn btn-outline-primary" for="btnradio1">Detect Players</label>
 
@@ -333,7 +333,33 @@
 
                             <input type="radio" class="btn-check" name="btnradio"  model="Goal" id="btnradio4" autocomplete="off">
                             <label class="btn btn-outline-primary" for="btnradio4">Goal Detection</label>
+
+                            <input type="radio" class="btn-check" name="btnradio"  model="Hand" id="btnradio5" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btnradio5">Hand Error Detection</label>
+
+                            <input type="radio" class="btn-check" name="btnradio"  model="BallOut" id="btnradio6" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btnradio6">Ball-out Detection</label>
+                        </div> -->
+                        <div class="container">
+                            <div class="dropdown mb-3">
+                                <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Detect Players
+                                </button>
+                                <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="#" data-model="Players">Detect Players</a></li>
+                                    <li><a class="dropdown-item" href="#" data-model="Teams">Classify Teams</a></li>
+                                    <li><a class="dropdown-item" href="#" data-model="Offside">Offside Detection</a></li>
+                                    <li><a class="dropdown-item" href="#" data-model="Goal">Goal Detection</a></li>
+                                    <li><a class="dropdown-item" href="#" data-model="Hand">Hand Error Detection</a></li>
+                                    <li><a class="dropdown-item" href="#" data-model="BallOut">Ball-out Detection</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Hidden input to store the selected value -->
+                            <input type="hidden" id="selectedModel" name="selectedModel" value="Players">
                         </div>
+
+
                         <div class="input-group container-fluid">
                             <input type="file" id="UploadedFile" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon">
                             <div class="input-group-text" id="btnGroupAddon">.mp4</div>
@@ -357,8 +383,9 @@
         </div>
     </section>
 
-    <section id="loading" class="loadingSection d-flex justify-content-center align-items-center">
+    <section id="loading" class="loadingSection d-flex justify-content-center align-items-center flex-column gap-3">
         <div class="loader"></div>
+        <span id="SpanID" class="text-white"></span>
     </section>
 
 
@@ -368,11 +395,12 @@
         const VSec = document.getElementById("VSec");
         const videopreview = document.getElementById("video-preview");
         const loading = document.getElementById("loading");
+        const SpanID = document.getElementById("SpanID");
 
         loading.classList.remove('d-flex');
         loading.style.display = 'none';
 
-        const apiUrl = "https://0a82-35-230-24-214.ngrok-free.app";
+        const apiUrl = "https://f03e-35-231-195-74.ngrok-free.app";
 
         fileInput.addEventListener("change", function() {
             const file = this.files[0];
@@ -387,6 +415,7 @@
             loading.style.display = 'flex';
             try {
                 console.log('Uploading Video...');
+                SpanID.innerText = "Uploading and Processing Video..."
                 const formData = new FormData();
                 formData.append('file', file);
                 formData.append('type', type);
@@ -402,16 +431,80 @@
                 const FileID = data['file_id'];
                 console.log('Uploaded File ID:', FileID);
                 console.log('Video Uploaded and processed');
-                getVideo(FileID);
+                SpanID.innerText = "Video Uploaded and processed successfully"
+                if (type === 'Offside') {
+                    // Handle JSON response for Offside detection
+                    // const data = await response.json();
+                    console.log('Offside detection result:', data);
+                    
+                    loading.style.display = 'none';
+                    SpanID.innerText = ""
+                    
+                    // Display the message to the user
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert('Offside detection completed');
+                    }
+                    
+                } else {
+                    getVideo(FileID, type);}
             } catch (error) {
                 console.error('Error', error);
             }
         }
         
-        async function getVideo (FILEID) {
+        // async function getVideo (FILEID, type) {
+        //     try {
+        //         console.log('Getting Video...');
+        //         console.log('FileID:', FILEID);
+        //         const response = await fetch(`${apiUrl}/get`, {
+        //             method: 'POST',
+        //             mode: 'cors',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 'Connection': 'keep-alive',
+        //                 'Accept': '*/*',
+        //                 'Accept-Encoding': 'gzip, deflate, br'
+        //             },
+        //             body: JSON.stringify({'file_id': FILEID}),
+        //         });
+        //         console.log("ResGET", response);
+        //         if (!response.ok) throw new Error('Failure Getting video');
+
+        //         const data = await response.blob();
+        //         const videoURL = URL.createObjectURL(data);
+        //         // console.log("URL: ",videoURL);
+
+        //         // Create a temporary <a> element to download the video
+        //         const a = document.createElement('a');
+        //         a.href = videoURL;
+        //         a.download = `${FILEID}.mp4`; // Set a desired filename
+        //         document.body.appendChild(a);
+        //         a.click();
+        //         document.body.removeChild(a);
+
+        //         alert('Video Downloaded Successfully! name: ' + `${FILEID}.mp4`);
+
+        //         // Optional: release the blob URL from memory after download
+        //         URL.revokeObjectURL(videoURL);
+
+        //         // VSec.style.display = "block";
+        //         // videopreview.style.display = "block";
+        //         // console.log('Video Fetched Successfully');
+        //     } catch (error) {
+        //         console.error('Error', error);
+        //     }
+        //     loading.style.display = 'none';
+        // }
+
+        async function getVideo (FILEID, type) {
             try {
                 console.log('Getting Video...');
+                SpanID.innerText = "Getting Video..."
                 console.log('FileID:', FILEID);
+                console.log('Type:', type);
+                
                 const response = await fetch(`${apiUrl}/get`, {
                     method: 'POST',
                     mode: 'cors',
@@ -423,31 +516,97 @@
                     },
                     body: JSON.stringify({'file_id': FILEID}),
                 });
+                
                 console.log("ResGET", response);
                 if (!response.ok) throw new Error('Failure Getting video');
                 
+                // Handle different response types based on the type parameter
+                // if (type === 'Offside') {
+                //     // Handle JSON response for Offside detection
+                //     const data = await response.json();
+                //     console.log('Offside detection result:', data);
+                    
+                //     loading.style.display = 'none';
+                    
+                //     // Display the message to the user
+                //     if (data.message) {
+                //         alert(data.message);
+                //     } else {
+                //         alert('Offside detection completed');
+                //     }
+                    
+                // } else {
+                    // Handle blob response for other types (video download)
+                console.log("Start Downloading....");
+                SpanID.innerText = "Downloading Result...."
                 const data = await response.blob();
                 const videoURL = URL.createObjectURL(data);
-                // console.log("URL: ",videoURL);
                 
-                VSec.style.display = "block";
-                videopreview.style.display = "block";
-                console.log('Video Fetched Successfully');
+                
+                // Create a temporary <a> element to download the video
+                const a = document.createElement('a');
+                a.href = videoURL;
+                a.download = `${FILEID}.mp4`; // Set a desired filename
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                
+                console.log("Downloaded Successfully");
+                SpanID.innerText = "Downloaded Successfully"
+                
+                loading.style.display = 'none';
+                SpanID.innerText = ""
+                
+                alert('Video Downloaded Successfully! name: ' + `${FILEID}.mp4`);
+                
+                // Optional: release the blob URL from memory after download
+                URL.revokeObjectURL(videoURL);
+                // }
+                
+                // VSec.style.display = "block";
+                // videopreview.style.display = "block";
+                // console.log('Video Fetched Successfully');
+                
             } catch (error) {
                 console.error('Error', error);
+                loading.style.display = 'none';
+                alert(`Error processing ${type} detection`);
             }
             loading.style.display = 'none';
         }
 
         const myModal = document.getElementById('staticBackdrop')
-        const myInput = document.getElementById('myInput')
+        // const myInput = document.getElementById('myInput')
         const UploadedFile = document.getElementById('UploadedFile')
         const UPBTN = document.getElementById('UPBTN')
 
-        
+
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Update button text
+                document.getElementById('dropdownMenuButton').textContent = this.textContent;
+                
+                // Update hidden input value
+                document.getElementById('selectedModel').value = this.getAttribute('data-model');
+                
+                // Optional: Trigger custom event for form handling
+                const event = new CustomEvent('modelChanged', {
+                    detail: {
+                        model: this.getAttribute('data-model'),
+                        text: this.textContent
+                    }
+                });
+                document.dispatchEvent(event);
+            });
+        });
+
+        // Your existing JavaScript logic merged with dropdown
         UPBTN.disabled = true;
         const toastLiveExample = document.getElementById('liveToast')
         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+        
         UploadedFile.addEventListener("change", function() {
             const file = this.files[0];
             if (file && file.name.endsWith('.mp4')) {
@@ -457,10 +616,12 @@
                 toastBootstrap.show()
             }
         });
+        
         UPBTN.addEventListener("click", async (e) => {
-            const selectedRadio = document.querySelector('input[name="btnradio"]:checked');
-            if (selectedRadio) {
-                const ModelType = selectedRadio.getAttribute('model');
+            // Updated to work with dropdown instead of radio buttons
+            const selectedModel = document.getElementById('selectedModel').value;
+            if (selectedModel) {
+                const ModelType = selectedModel;
                 const Video = UploadedFile.files[0];
                 toastBootstrap.hide()
                 uploadVideo(Video, ModelType);
@@ -469,6 +630,43 @@
                 console.log('No option selected');
             }
         });
+
+        // Listen for the custom event (example usage)
+        document.addEventListener('modelChanged', function(e) {
+            console.log('Selected model:', e.detail.model);
+        });
+
+        
+        // UPBTN.disabled = true;
+        // const toastLiveExample = document.getElementById('liveToast')
+        // const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+        // UploadedFile.addEventListener("change", function() {
+        //     const file = this.files[0];
+        //     if (file && file.name.endsWith('.mp4')) {
+        //         UPBTN.disabled = false;
+        //     } else {
+        //         UPBTN.disabled = true;
+        //         toastBootstrap.show()
+        //     }
+        // });
+        // UPBTN.addEventListener("click", async (e) => {
+        //     const selectedRadio = document.querySelector('input[name="btnradio"]:checked');
+        //     if (selectedRadio) {
+        //         const ModelType = selectedRadio.getAttribute('model');
+        //         const Video = UploadedFile.files[0];
+        //         toastBootstrap.hide()
+        //         uploadVideo(Video, ModelType);
+        //         // getVideo("27005cf1da");
+        //     } else {
+        //         console.log('No option selected');
+        //     }
+        // });
+
+        // Listen for the custom event (example usage)
+        // document.addEventListener('modelChanged', function(e) {
+        //     console.log('Selected model:', e.detail.model);
+        //     console.log('Selected text:', e.detail.text);
+        // });
 
         function toggleMode() {
             document.body.classList.toggle('dark-mode');

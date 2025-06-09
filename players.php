@@ -376,7 +376,7 @@ body {
 
     </div>
     <script>
-        const apiUrl = "https://970f-34-168-232-45.ngrok-free.app/BModel";
+        const apiUrl = "https://f03e-35-231-195-74.ngrok-free.app/BModel";
 
         const Loder = document.getElementById('wifi-loader')
         const PlTable = document.getElementById('PlTable')
