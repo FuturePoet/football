@@ -272,30 +272,30 @@
         <div class="section">
             <h2>Player Recognition</h2>
             <p>Identify players on the field using our advanced AI models. This feature helps in tracking player movements and analyzing their performance.</p>
-            <video src="images/team_reg.mp4" controls></video>
+            <video src="images/Player_Recognition.mp4" controls></video>
         </div>
         <div class="section">
             <h2>🏆 Team Classification</h2>
             <p>Our AI can classify teams based on their kits and playing styles. This feature helps in identifying teams during live matches and provides insights into their strategies.</p>
-            <video src="images/team_class.mp4" controls></video>
+            <video src="images/Team_Classification.mp4" controls></video>
         </div>
         
         <div class="section">
         <h2> Goal Detection🥅</h2>
         <p>Automatically detect goals and key moments in the match. This feature ensures that you never miss a crucial moment, providing real-time updates and highlights.</p>
-            <video src="images/goal.mp4" controls type="video/mp4"></video>
+            <video src="images/Goal_Detection_1.mp4" controls type="video/mp4"></video>
         </div>
         
         <div class="section d-none">
         <h2>🚩 Offside Detection</h2>
         <p>Identify offsides in real-time using advanced AI models. This feature helps referees and viewers to make accurate decisions during the game.</p>
-            <video src="FF.mp4" controls></video>
+            <video src="uploads/FF.mp4" controls></video>
         </div>
         
     </div>
   
     <p>Our AI model is constantly evolving to provide more accurate and detailed analysis of football matches. Stay tuned for more updates!</p>
-    <h1>You can also upload your own football video for analysis</h1>
+    <h2>You can also Try our model on your own football video or live video for analysis</h2>
     <!-- <label for="video-upload" class="upload-label">Choose Video</label> -->
     <input type="file" id="video-upload" accept="video/*" style="display: none;">
     <div id="VSec" class="container" style="display: none;">
@@ -308,12 +308,57 @@
 
     <section>
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-lg btn-dark border border-primary m-5" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            Try The Model
+        <button type="button" class="btn btn-lg btn-dark border border-primary border-2 rounded-5 m-5" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Upload Video
         </button>
+        <button id="LiveBTN" type="button" class="btn btn-lg btn-dark border border-primary border-2 rounded-5 m-5">
+            Live Video
+        </button>
+        <!-- <br>
+        <video id="liveVideo" autoplay playsinline style="width: 640px; height: 480px; border: 1px solid #ccc;"></video>
+        <canvas id="captureCanvas" style="display: none;"></canvas>
+        <img id="annotatedResult" style="margin-top: 10px; width: 640px; height: 480px;" /> -->
 
-        <!-- Modal -->
-        <div class="modal fade  w-100" id="staticBackdrop"  data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <!-- Live Modal -->
+        <div class="modal fade" id="liveModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-dark">
+                <div class="modal-header text-white">
+                    <h5 class="modal-title" id="liveModalLabel">Live Player Detection</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="stopStreaming()"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="container">
+                        <div class="dropdown mb-3">
+                            <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                All
+                            </button>
+                            <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="#" data-model="All">All</a></li>
+                                <li><a class="dropdown-item" href="#" data-model="Players">Detect Players</a></li>
+                                <li><a class="dropdown-item" href="#" data-model="Teams">Classify Teams</a></li>
+                                <li><a class="dropdown-item" href="#" data-model="Offside">Offside Detection</a></li>
+                                <li><a class="dropdown-item" href="#" data-model="Goal">Goal Detection</a></li>
+                                <li><a class="dropdown-item" href="#" data-model="Hand">Hand Error Detection</a></li>
+                                <li><a class="dropdown-item" href="#" data-model="BallOut">Ball-out Detection</a></li>
+                            </ul>
+                        </div>
+                        <!-- Hidden input to store the selected value -->
+                        <!-- <input type="hidden" id="selectedModel" name="selectedModel" value="Players"> -->
+                        <input type="hidden" id="liveSelectedModel" value="All">
+                    </div>
+                    
+                    <video id="liveVideo" autoplay playsinline class="w-100 h-100 border" style="max-width: 640px; max-height: 480px; border: 1px solid #ccc;"></video>
+                    <canvas id="captureCanvas" class="w-100 h-100 border" style="display: none;"></canvas>
+                    <img id="annotatedResult" class="w-100 h-100 border" style="margin-top: 10px; max-width: 640px; max-height: 480px;" />
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+        <!-- Upload Modal -->
+        <div class="modal fade w-100" id="staticBackdrop"  data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content bg-dark">
                     <div class="modal-header text-white">
@@ -321,28 +366,9 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <!-- <div class="btn-group d-flex gap-0 flex-wrap container-fluid mb-3" role="group" aria-label="Basic radio toggle button group">
-                            <input type="radio" class="btn-check" name="btnradio" model="Players" id="btnradio1" autocomplete="off" checked>
-                            <label class="btn btn-outline-primary" for="btnradio1">Detect Players</label>
-
-                            <input type="radio" class="btn-check" name="btnradio" model="Teams" id="btnradio2" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btnradio2">Classefy Teams</label>
-
-                            <input type="radio" class="btn-check" name="btnradio" model="Offside" id="btnradio3" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btnradio3">Offside Detection</label>
-
-                            <input type="radio" class="btn-check" name="btnradio"  model="Goal" id="btnradio4" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btnradio4">Goal Detection</label>
-
-                            <input type="radio" class="btn-check" name="btnradio"  model="Hand" id="btnradio5" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btnradio5">Hand Error Detection</label>
-
-                            <input type="radio" class="btn-check" name="btnradio"  model="BallOut" id="btnradio6" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btnradio6">Ball-out Detection</label>
-                        </div> -->
                         <div class="container">
                             <div class="dropdown mb-3">
-                                <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
                                     Detect Players
                                 </button>
                                 <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
@@ -356,12 +382,13 @@
                             </div>
 
                             <!-- Hidden input to store the selected value -->
-                            <input type="hidden" id="selectedModel" name="selectedModel" value="Players">
+                            <!-- <input type="hidden" id="selectedModel" name="selectedModel" value="Players"> -->
+                            <input type="hidden" id="uploadSelectedModel" value="Players">
                         </div>
 
 
                         <div class="input-group container-fluid">
-                            <input type="file" id="UploadedFile" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon">
+                            <input type="file" accept=".mp4" id="UploadedFile" class="form-control" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon">
                             <div class="input-group-text" id="btnGroupAddon">.mp4</div>
                         </div>
                     </div>
@@ -400,7 +427,7 @@
         loading.classList.remove('d-flex');
         loading.style.display = 'none';
 
-        const apiUrl = "https://f03e-35-231-195-74.ngrok-free.app";
+        const apiUrl = "https://ff07-34-19-16-26.ngrok-free.app";
 
         fileInput.addEventListener("change", function() {
             const file = this.files[0];
@@ -425,7 +452,14 @@
                     body: formData,
                 });
                 console.log("ResUP", response);
-                if (!response.ok && response.json.error) throw new Error('Failure uploading video');
+                if (!response.ok) {
+                    try {
+                        const err = await response.json();
+                        throw new Error(err.error || "Failure uploading video");
+                    } catch {
+                        throw new Error("Unknown upload error");
+                    }
+                }
                 const data = await response.json();
                 console.log('ReturnUP: ', data);
                 const FileID = data['file_id'];
@@ -434,7 +468,6 @@
                 SpanID.innerText = "Video Uploaded and processed successfully"
                 if (type === 'Offside') {
                     // Handle JSON response for Offside detection
-                    // const data = await response.json();
                     console.log('Offside detection result:', data);
                     
                     loading.style.display = 'none';
@@ -453,50 +486,6 @@
                 console.error('Error', error);
             }
         }
-        
-        // async function getVideo (FILEID, type) {
-        //     try {
-        //         console.log('Getting Video...');
-        //         console.log('FileID:', FILEID);
-        //         const response = await fetch(`${apiUrl}/get`, {
-        //             method: 'POST',
-        //             mode: 'cors',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //                 'Connection': 'keep-alive',
-        //                 'Accept': '*/*',
-        //                 'Accept-Encoding': 'gzip, deflate, br'
-        //             },
-        //             body: JSON.stringify({'file_id': FILEID}),
-        //         });
-        //         console.log("ResGET", response);
-        //         if (!response.ok) throw new Error('Failure Getting video');
-
-        //         const data = await response.blob();
-        //         const videoURL = URL.createObjectURL(data);
-        //         // console.log("URL: ",videoURL);
-
-        //         // Create a temporary <a> element to download the video
-        //         const a = document.createElement('a');
-        //         a.href = videoURL;
-        //         a.download = `${FILEID}.mp4`; // Set a desired filename
-        //         document.body.appendChild(a);
-        //         a.click();
-        //         document.body.removeChild(a);
-
-        //         alert('Video Downloaded Successfully! name: ' + `${FILEID}.mp4`);
-
-        //         // Optional: release the blob URL from memory after download
-        //         URL.revokeObjectURL(videoURL);
-
-        //         // VSec.style.display = "block";
-        //         // videopreview.style.display = "block";
-        //         // console.log('Video Fetched Successfully');
-        //     } catch (error) {
-        //         console.error('Error', error);
-        //     }
-        //     loading.style.display = 'none';
-        // }
 
         async function getVideo (FILEID, type) {
             try {
@@ -520,23 +509,6 @@
                 console.log("ResGET", response);
                 if (!response.ok) throw new Error('Failure Getting video');
                 
-                // Handle different response types based on the type parameter
-                // if (type === 'Offside') {
-                //     // Handle JSON response for Offside detection
-                //     const data = await response.json();
-                //     console.log('Offside detection result:', data);
-                    
-                //     loading.style.display = 'none';
-                    
-                //     // Display the message to the user
-                //     if (data.message) {
-                //         alert(data.message);
-                //     } else {
-                //         alert('Offside detection completed');
-                //     }
-                    
-                // } else {
-                    // Handle blob response for other types (video download)
                 console.log("Start Downloading....");
                 SpanID.innerText = "Downloading Result...."
                 const data = await response.blob();
@@ -561,11 +533,6 @@
                 
                 // Optional: release the blob URL from memory after download
                 URL.revokeObjectURL(videoURL);
-                // }
-                
-                // VSec.style.display = "block";
-                // videopreview.style.display = "block";
-                // console.log('Video Fetched Successfully');
                 
             } catch (error) {
                 console.error('Error', error);
@@ -576,33 +543,29 @@
         }
 
         const myModal = document.getElementById('staticBackdrop')
-        // const myInput = document.getElementById('myInput')
         const UploadedFile = document.getElementById('UploadedFile')
         const UPBTN = document.getElementById('UPBTN')
 
-
-        document.querySelectorAll('.dropdown-item').forEach(item => {
+        document.querySelectorAll('#staticBackdrop .dropdown-item').forEach(item => {
             item.addEventListener('click', function(e) {
                 e.preventDefault();
-                
-                // Update button text
-                document.getElementById('dropdownMenuButton').textContent = this.textContent;
-                
-                // Update hidden input value
-                document.getElementById('selectedModel').value = this.getAttribute('data-model');
-                
-                // Optional: Trigger custom event for form handling
-                const event = new CustomEvent('modelChanged', {
-                    detail: {
-                        model: this.getAttribute('data-model'),
-                        text: this.textContent
-                    }
-                });
-                document.dispatchEvent(event);
+                const model = this.getAttribute('data-model');
+                document.getElementById('uploadSelectedModel').value = model;
+                document.getElementById('dropdownMenuButton2').textContent = this.textContent;
+                console.log('Upload Selected Model:', model);
             });
         });
 
-        // Your existing JavaScript logic merged with dropdown
+        document.querySelectorAll('#liveModal .dropdown-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const model = this.getAttribute('data-model');
+                document.getElementById('liveSelectedModel').value = model;
+                document.getElementById('dropdownMenuButton1').textContent = this.textContent;
+                console.log('Live Selected Model:', model);
+            });
+        });
+
         UPBTN.disabled = true;
         const toastLiveExample = document.getElementById('liveToast')
         const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
@@ -619,54 +582,102 @@
         
         UPBTN.addEventListener("click", async (e) => {
             // Updated to work with dropdown instead of radio buttons
-            const selectedModel = document.getElementById('selectedModel').value;
+            const selectedModel = document.getElementById('uploadSelectedModel').value;
             if (selectedModel) {
                 const ModelType = selectedModel;
                 const Video = UploadedFile.files[0];
                 toastBootstrap.hide()
                 uploadVideo(Video, ModelType);
-                // getVideo("27005cf1da");
             } else {
                 console.log('No option selected');
             }
         });
 
-        // Listen for the custom event (example usage)
-        document.addEventListener('modelChanged', function(e) {
-            console.log('Selected model:', e.detail.model);
+        const liveVideoButton = document.getElementById('LiveBTN');
+        const liveVideo = document.getElementById('liveVideo');
+        const captureCanvas = document.getElementById('captureCanvas');
+        const annotatedResult = document.getElementById('annotatedResult');
+        const ctx = captureCanvas.getContext('2d');
+        let streaming = false;
+        let frameInterval;
+
+        const liveModalElement = document.getElementById('liveModal');
+        const liveModal = new bootstrap.Modal(liveModalElement);
+
+        liveModalElement.addEventListener('hidden.bs.modal', () => {
+            if (streaming) {
+                stopStreaming();
+            }
         });
 
-        
-        // UPBTN.disabled = true;
-        // const toastLiveExample = document.getElementById('liveToast')
-        // const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
-        // UploadedFile.addEventListener("change", function() {
-        //     const file = this.files[0];
-        //     if (file && file.name.endsWith('.mp4')) {
-        //         UPBTN.disabled = false;
-        //     } else {
-        //         UPBTN.disabled = true;
-        //         toastBootstrap.show()
-        //     }
-        // });
-        // UPBTN.addEventListener("click", async (e) => {
-        //     const selectedRadio = document.querySelector('input[name="btnradio"]:checked');
-        //     if (selectedRadio) {
-        //         const ModelType = selectedRadio.getAttribute('model');
-        //         const Video = UploadedFile.files[0];
-        //         toastBootstrap.hide()
-        //         uploadVideo(Video, ModelType);
-        //         // getVideo("27005cf1da");
-        //     } else {
-        //         console.log('No option selected');
-        //     }
-        // });
+        liveVideoButton.addEventListener('click', async () => {
+            if (streaming) {
+                stopStreaming();
+                liveModal.hide();
+            } else {
+                await startStreaming();
+                liveModal.show();
+            }
+        });
 
-        // Listen for the custom event (example usage)
-        // document.addEventListener('modelChanged', function(e) {
-        //     console.log('Selected model:', e.detail.model);
-        //     console.log('Selected text:', e.detail.text);
-        // });
+        async function startStreaming() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                liveVideo.srcObject = stream;
+                streaming = true;
+                liveVideoButton.innerText = "Stop Video";
+                
+                frameInterval = setInterval(async () => {
+                    captureCanvas.width = liveVideo.videoWidth;
+                    captureCanvas.height = liveVideo.videoHeight;
+                    ctx.drawImage(liveVideo, 0, 0);
+                    
+                    const selectedModel = document.getElementById('liveSelectedModel').value;
+                    const ModelType = selectedModel;
+                    console.log("Live Selected Model: ", ModelType);
+                    
+                    const blob = await new Promise(resolve => captureCanvas.toBlob(resolve, 'image/jpeg'));
+                    const formData = new FormData();
+                    formData.append('frame', blob);
+                    formData.append('type', ModelType);
+                    
+                    const response = await fetch(`${apiUrl}/live_frame`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (!response.ok) {
+                        try {
+                            const errorResponse = await response.json();
+                            console.error("Backend error:", errorResponse.error);
+                        } catch (jsonError) {
+                            const text = await response.text();
+                            console.error("Backend error (non-JSON):", text);
+                        }
+                        return;
+                    }
+                    
+                    const annotatedBlob = await response.blob();
+                    annotatedResult.src = URL.createObjectURL(annotatedBlob);
+                }, 500);
+            } catch (err) {
+                console.error("Error accessing webcam:", err);
+                liveVideoButton.innerText = "Live Unavailable";
+                liveVideoButton.disabled = true;
+            }
+        }
+
+        function stopStreaming() {
+            const stream = liveVideo.srcObject;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            
+            clearInterval(frameInterval);
+            streaming = false;
+            liveVideoButton.innerText = "Live Video";
+        }
+
 
         function toggleMode() {
             document.body.classList.toggle('dark-mode');

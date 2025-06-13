@@ -107,10 +107,95 @@ body {
     margin: 5px 0;
 }
 
+/* File upload section styles */
+.upload-section {
+    background-color: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 10px;
+    padding: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.upload-section:hover {
+    border-color: #4f29f0;
+    background-color: #f0f8ff;
+}
+
+.upload-section h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.file-input-wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 10px;
+}
+
+.file-input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.file-input-label {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #4f29f0;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: 500;
+}
+
+.file-input-label:hover {
+    background-color: #3d1fcc;
+}
+
+.upload-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover {
+    background-color: #218838;
+}
+
+.upload-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.file-info {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    display: none;
+}
+
 @media (max-width: 768px) {
     .card {
         flex: 1 1 calc(50% - 40px);
         max-width: calc(50% - 40px);
+    }
+    
+    .file-input-label, .upload-btn {
+        display: block;
+        margin: 10px 0;
+        width: 100%;
     }
 }
 
@@ -343,6 +428,23 @@ body {
             </ul>
         </div>
 
+        <!-- File Upload Section -->
+        <div class="upload-section">
+            <h3>Upload Custom Player Data</h3>
+            <p>Select an Excel file (.xlsx, .xls) to analyze player data with our AI model</p>
+            
+            <div class="file-input-wrapper">
+                <input type="file" id="excelFile" class="file-input" accept=".xlsx,.xls" />
+                <label for="excelFile" class="file-input-label">Choose Excel File</label>
+            </div>
+            
+            <button id="uploadBtn" class="upload-btn" disabled>Upload & Analyze</button>
+            
+            <div id="fileInfo" class="file-info">
+                <strong>Selected file:</strong> <span id="fileName"></span>
+            </div>
+        </div>
+
         <div id="wifi-loader">
             <svg class="circle-outer" viewBox="0 0 86 86">
                 <circle class="back" cx="43" cy="43" r="40"></circle>
@@ -376,18 +478,55 @@ body {
 
     </div>
     <script>
-        const apiUrl = "https://f03e-35-231-195-74.ngrok-free.app/BModel";
+        const apiUrl = "https://baf0-34-19-16-26.ngrok-free.app/BModel";
 
         const Loder = document.getElementById('wifi-loader')
         const PlTable = document.getElementById('PlTable')
         const TBODY = document.getElementById('TBODY')
-        let d=1
+        const excelFileInput = document.getElementById('excelFile')
+        const uploadBtn = document.getElementById('uploadBtn')
+        const fileInfo = document.getElementById('fileInfo')
+        const fileName = document.getElementById('fileName')
+        let d = 1
 
         PlTable.classList.add('d-none')
         Loder.classList.remove('d-none')
 
+        // File input change handler
+        excelFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate file type
+                const validTypes = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'];
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+                
+                if (validTypes.includes(file.type) || ['xlsx', 'xls'].includes(fileExtension)) {
+                    fileName.textContent = file.name;
+                    fileInfo.style.display = 'block';
+                    uploadBtn.disabled = false;
+                } else {
+                    alert('Please select a valid Excel file (.xlsx or .xls)');
+                    e.target.value = '';
+                    fileInfo.style.display = 'none';
+                    uploadBtn.disabled = true;
+                }
+            } else {
+                fileInfo.style.display = 'none';
+                uploadBtn.disabled = true;
+            }
+        });
+
+        // Upload button click handler
+        uploadBtn.addEventListener('click', function() {
+            const file = excelFileInput.files[0];
+            if (file) {
+                uploadExcelFile(file);
+            }
+        });
+
         function renderdata(Players) {
             TBODY.innerHTML = '';
+            d = 1; // Reset counter
             Players.forEach(TRPlayer => {
                 const Player = document.createElement('tr');
                 Player.innerHTML = `
@@ -397,11 +536,50 @@ body {
                 `;
                 d = d + 1;
                 TBODY.appendChild(Player);
-                // Update IdNum to track highest numeric ID
-                // IdNum = Math.max(IdNum, parseInt(post.id));
             });
             Loder.classList.add('d-none')
             PlTable.classList.remove('d-none')
+            
+            excelFileInput.value = ''; // Clear the file input
+            fileInfo.style.display = 'none'; // Hide file info
+            uploadBtn.disabled = true; // Disable upload button
+        }
+
+        async function uploadExcelFile(file) {
+            try {
+                // Show loader
+                PlTable.classList.add('d-none')
+                Loder.classList.remove('d-none')
+                
+                // Create FormData
+                const formData = new FormData();
+                formData.append('data', file);
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'ngrok-skip-browser-warning': 'true' // Add this header for ngrok
+                    },
+                    body: formData
+                });
+                
+                console.log("Excel Upload Response", response);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Excel Upload Return: ', data);
+                renderdata(data);
+                
+            } catch (error) {
+                console.error('Error uploading Excel file:', error);
+                alert('Error uploading file. Please try again.');
+                Loder.classList.add('d-none')
+                PlTable.classList.remove('d-none')
+            }
         }
 
         async function BDATA () {
@@ -410,17 +588,21 @@ body {
                     method: 'POST',
                     mode: 'cors',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true'
                     },
                     body: JSON.stringify({'test': "test"}),
                 });
                 console.log("ResUP", response);
-                if (!response.ok && response.json.error) throw new Error('Failure fetching data');
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 console.log('ReturnUP: ', data);
                 renderdata(data);
             } catch (error) {
                 console.error('Error', error);
+                // Hide loader on error
+                Loder.classList.add('d-none')
+                PlTable.classList.remove('d-none')
             }
         }
 
