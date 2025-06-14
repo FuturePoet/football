@@ -5,18 +5,15 @@ namespace Illuminate\Pipeline;
 use Closure;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Pipeline\Pipeline as PipelineContract;
-use Illuminate\Support\Traits\Conditionable;
 use RuntimeException;
 use Throwable;
 
 class Pipeline implements PipelineContract
 {
-    use Conditionable;
-
     /**
      * The container implementation.
      *
-     * @var \Illuminate\Contracts\Container\Container|null
+     * @var \Illuminate\Contracts\Container\Container
      */
     protected $container;
 
@@ -42,19 +39,12 @@ class Pipeline implements PipelineContract
     protected $method = 'handle';
 
     /**
-     * The final callback to be executed after the pipeline ends regardless of the outcome.
-     *
-     * @var \Closure|null
-     */
-    protected $finally;
-
-    /**
      * Create a new class instance.
      *
      * @param  \Illuminate\Contracts\Container\Container|null  $container
      * @return void
      */
-    public function __construct(?Container $container = null)
+    public function __construct(Container $container = null)
     {
         $this->container = $container;
     }
@@ -86,19 +76,6 @@ class Pipeline implements PipelineContract
     }
 
     /**
-     * Push additional pipes onto the pipeline.
-     *
-     * @param  array|mixed  $pipes
-     * @return $this
-     */
-    public function pipe($pipes)
-    {
-        array_push($this->pipes, ...(is_array($pipes) ? $pipes : func_get_args()));
-
-        return $this;
-    }
-
-    /**
      * Set the method to call on the pipes.
      *
      * @param  string  $method
@@ -123,13 +100,7 @@ class Pipeline implements PipelineContract
             array_reverse($this->pipes()), $this->carry(), $this->prepareDestination($destination)
         );
 
-        try {
-            return $pipeline($this->passable);
-        } finally {
-            if ($this->finally) {
-                ($this->finally)($this->passable);
-            }
-        }
+        return $pipeline($this->passable);
     }
 
     /**
@@ -142,19 +113,6 @@ class Pipeline implements PipelineContract
         return $this->then(function ($passable) {
             return $passable;
         });
-    }
-
-    /**
-     * Set a final callback to be executed after the pipeline ends regardless of the outcome.
-     *
-     * @param  \Closure  $callback
-     * @return $this
-     */
-    public function finally(Closure $callback)
-    {
-        $this->finally = $callback;
-
-        return $this;
     }
 
     /**

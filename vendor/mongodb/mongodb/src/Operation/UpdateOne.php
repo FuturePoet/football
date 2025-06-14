@@ -36,7 +36,8 @@ use function MongoDB\is_pipeline;
  */
 class UpdateOne implements Executable, Explainable
 {
-    private Update $update;
+    /** @var Update */
+    private $update;
 
     /**
      * Constructs an update command.
@@ -96,7 +97,7 @@ class UpdateOne implements Executable, Explainable
             $collectionName,
             $filter,
             $update,
-            ['multi' => false] + $options,
+            ['multi' => false] + $options
         );
     }
 

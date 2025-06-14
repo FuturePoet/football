@@ -17,9 +17,7 @@
 
 namespace MongoDB\Operation;
 
-use Iterator;
-use MongoDB\Codec\DocumentCodec;
-use MongoDB\Driver\CursorInterface;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Query;
 use MongoDB\Driver\ReadConcern;
@@ -28,7 +26,6 @@ use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Exception\UnsupportedException;
-use MongoDB\Model\CodecCursor;
 
 use function is_array;
 use function is_bool;
@@ -36,7 +33,6 @@ use function is_integer;
 use function is_object;
 use function is_string;
 use function MongoDB\document_to_array;
-use function MongoDB\is_document;
 use function trigger_error;
 
 use const E_USER_DEPRECATED;
@@ -54,14 +50,17 @@ class Find implements Executable, Explainable
     public const TAILABLE = 2;
     public const TAILABLE_AWAIT = 3;
 
-    private string $databaseName;
+    /** @var string */
+    private $databaseName;
 
-    private string $collectionName;
+    /** @var string */
+    private $collectionName;
 
     /** @var array|object */
     private $filter;
 
-    private array $options;
+    /** @var array */
+    private $options;
 
     /**
      * Constructs a find command.
@@ -76,9 +75,6 @@ class Find implements Executable, Explainable
      *    some shards are inaccessible (instead of throwing an error).
      *
      *  * batchSize (integer): The number of documents to return per batch.
-     *
-     *  * codec (MongoDB\Codec\DocumentCodec): Codec used to decode documents
-     *    from BSON to PHP objects.
      *
      *  * collation (document): Collation specification.
      *
@@ -166,8 +162,8 @@ class Find implements Executable, Explainable
      */
     public function __construct(string $databaseName, string $collectionName, $filter, array $options = [])
     {
-        if (! is_document($filter)) {
-            throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
+        if (! is_array($filter) && ! is_object($filter)) {
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
         if (isset($options['allowDiskUse']) && ! is_bool($options['allowDiskUse'])) {
@@ -182,12 +178,8 @@ class Find implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"batchSize" option', $options['batchSize'], 'integer');
         }
 
-        if (isset($options['codec']) && ! $options['codec'] instanceof DocumentCodec) {
-            throw InvalidArgumentException::invalidType('"codec" option', $options['codec'], DocumentCodec::class);
-        }
-
-        if (isset($options['collation']) && ! is_document($options['collation'])) {
-            throw InvalidArgumentException::expectedDocumentType('"collation" option', $options['collation']);
+        if (isset($options['collation']) && ! is_array($options['collation']) && ! is_object($options['collation'])) {
+            throw InvalidArgumentException::invalidType('"collation" option', $options['collation'], 'array or object');
         }
 
         if (isset($options['cursorType'])) {
@@ -212,8 +204,8 @@ class Find implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"limit" option', $options['limit'], 'integer');
         }
 
-        if (isset($options['max']) && ! is_document($options['max'])) {
-            throw InvalidArgumentException::expectedDocumentType('"max" option', $options['max']);
+        if (isset($options['max']) && ! is_array($options['max']) && ! is_object($options['max'])) {
+            throw InvalidArgumentException::invalidType('"max" option', $options['max'], 'array or object');
         }
 
         if (isset($options['maxAwaitTimeMS']) && ! is_integer($options['maxAwaitTimeMS'])) {
@@ -228,12 +220,12 @@ class Find implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"maxTimeMS" option', $options['maxTimeMS'], 'integer');
         }
 
-        if (isset($options['min']) && ! is_document($options['min'])) {
-            throw InvalidArgumentException::expectedDocumentType('"min" option', $options['min']);
+        if (isset($options['min']) && ! is_array($options['min']) && ! is_object($options['min'])) {
+            throw InvalidArgumentException::invalidType('"min" option', $options['min'], 'array or object');
         }
 
-        if (isset($options['modifiers']) && ! is_document($options['modifiers'])) {
-            throw InvalidArgumentException::expectedDocumentType('"modifiers" option', $options['modifiers']);
+        if (isset($options['modifiers']) && ! is_array($options['modifiers']) && ! is_object($options['modifiers'])) {
+            throw InvalidArgumentException::invalidType('"modifiers" option', $options['modifiers'], 'array or object');
         }
 
         if (isset($options['noCursorTimeout']) && ! is_bool($options['noCursorTimeout'])) {
@@ -244,8 +236,8 @@ class Find implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"oplogReplay" option', $options['oplogReplay'], 'boolean');
         }
 
-        if (isset($options['projection']) && ! is_document($options['projection'])) {
-            throw InvalidArgumentException::expectedDocumentType('"projection" option', $options['projection']);
+        if (isset($options['projection']) && ! is_array($options['projection']) && ! is_object($options['projection'])) {
+            throw InvalidArgumentException::invalidType('"projection" option', $options['projection'], 'array or object');
         }
 
         if (isset($options['readConcern']) && ! $options['readConcern'] instanceof ReadConcern) {
@@ -276,16 +268,16 @@ class Find implements Executable, Explainable
             throw InvalidArgumentException::invalidType('"snapshot" option', $options['snapshot'], 'boolean');
         }
 
-        if (isset($options['sort']) && ! is_document($options['sort'])) {
-            throw InvalidArgumentException::expectedDocumentType('"sort" option', $options['sort']);
+        if (isset($options['sort']) && ! is_array($options['sort']) && ! is_object($options['sort'])) {
+            throw InvalidArgumentException::invalidType('"sort" option', $options['sort'], 'array or object');
         }
 
         if (isset($options['typeMap']) && ! is_array($options['typeMap'])) {
             throw InvalidArgumentException::invalidType('"typeMap" option', $options['typeMap'], 'array');
         }
 
-        if (isset($options['let']) && ! is_document($options['let'])) {
-            throw InvalidArgumentException::expectedDocumentType('"let" option', $options['let']);
+        if (isset($options['let']) && ! is_array($options['let']) && ! is_object($options['let'])) {
+            throw InvalidArgumentException::invalidType('"let" option', $options['let'], 'array or object');
         }
 
         if (isset($options['readConcern']) && $options['readConcern']->isDefault()) {
@@ -300,10 +292,6 @@ class Find implements Executable, Explainable
             trigger_error('The "maxScan" option is deprecated and will be removed in a future release', E_USER_DEPRECATED);
         }
 
-        if (isset($options['codec']) && isset($options['typeMap'])) {
-            throw InvalidArgumentException::cannotCombineCodecAndTypeMap();
-        }
-
         $this->databaseName = $databaseName;
         $this->collectionName = $collectionName;
         $this->filter = $filter;
@@ -314,7 +302,7 @@ class Find implements Executable, Explainable
      * Execute the operation.
      *
      * @see Executable::execute()
-     * @return CursorInterface&Iterator
+     * @return Cursor
      * @throws UnsupportedException if read concern is used and unsupported
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
@@ -326,10 +314,6 @@ class Find implements Executable, Explainable
         }
 
         $cursor = $server->executeQuery($this->databaseName . '.' . $this->collectionName, new Query($this->filter, $this->createQueryOptions()), $this->createExecuteOptions());
-
-        if (isset($this->options['codec'])) {
-            return CodecCursor::fromCursor($cursor, $this->options['codec']);
-        }
 
         if (isset($this->options['typeMap'])) {
             $cursor->setTypeMap($this->options['typeMap']);

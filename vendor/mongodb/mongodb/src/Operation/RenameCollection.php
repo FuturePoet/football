@@ -38,11 +38,14 @@ use function is_bool;
  */
 class RenameCollection implements Executable
 {
-    private string $fromNamespace;
+    /** @var string */
+    private $fromNamespace;
 
-    private string $toNamespace;
+    /** @var string */
+    private $toNamespace;
 
-    private array $options;
+    /** @var array */
+    private $options;
 
     /**
      * Constructs a renameCollection command.

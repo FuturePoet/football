@@ -37,13 +37,17 @@ use function is_integer;
  */
 class DropIndexes implements Executable
 {
-    private string $databaseName;
+    /** @var string */
+    private $databaseName;
 
-    private string $collectionName;
+    /** @var string */
+    private $collectionName;
 
-    private string $indexName;
+    /** @var string */
+    private $indexName;
 
-    private array $options;
+    /** @var array */
+    private $options;
 
     /**
      * Constructs a dropIndexes command.
@@ -72,6 +76,8 @@ class DropIndexes implements Executable
      */
     public function __construct(string $databaseName, string $collectionName, string $indexName, array $options = [])
     {
+        $indexName = $indexName;
+
         if ($indexName === '') {
             throw new InvalidArgumentException('$indexName cannot be empty');
         }

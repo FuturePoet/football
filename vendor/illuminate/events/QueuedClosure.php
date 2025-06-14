@@ -3,10 +3,7 @@
 namespace Illuminate\Events;
 
 use Closure;
-use Illuminate\Support\Collection;
-use Laravel\SerializableClosure\SerializableClosure;
-
-use function Illuminate\Support\enum_value;
+use Illuminate\Queue\SerializableClosureFactory;
 
 class QueuedClosure
 {
@@ -72,18 +69,18 @@ class QueuedClosure
     /**
      * Set the desired queue for the job.
      *
-     * @param  \BackedEnum|string|null  $queue
+     * @param  string|null  $queue
      * @return $this
      */
     public function onQueue($queue)
     {
-        $this->queue = enum_value($queue);
+        $this->queue = $queue;
 
         return $this;
     }
 
     /**
-     * Set the desired delay in seconds for the job.
+     * Set the desired delay for the job.
      *
      * @param  \DateTimeInterface|\DateInterval|int|null  $delay
      * @return $this
@@ -117,11 +114,11 @@ class QueuedClosure
     {
         return function (...$arguments) {
             dispatch(new CallQueuedListener(InvokeQueuedClosure::class, 'handle', [
-                'closure' => new SerializableClosure($this->closure),
+                'closure' => SerializableClosureFactory::make($this->closure),
                 'arguments' => $arguments,
-                'catch' => (new Collection($this->catchCallbacks))
-                    ->map(fn ($callback) => new SerializableClosure($callback))
-                    ->all(),
+                'catch' => collect($this->catchCallbacks)->map(function ($callback) {
+                    return SerializableClosureFactory::make($callback);
+                })->all(),
             ]))->onConnection($this->connection)->onQueue($this->queue)->delay($this->delay);
         };
     }

@@ -32,11 +32,11 @@ use function array_key_exists;
  *
  * @see \MongoDB\Database::listCollections()
  * @see https://github.com/mongodb/specifications/blob/master/source/enumerate-collections.rst
- * @template-implements ArrayAccess<string, mixed>
  */
 class CollectionInfo implements ArrayAccess
 {
-    private array $info;
+    /** @var array */
+    private $info;
 
     /** @param array $info Collection info */
     public function __construct(array $info)
@@ -147,41 +147,39 @@ class CollectionInfo implements ArrayAccess
      * Check whether a field exists in the collection information.
      *
      * @see https://php.net/arrayaccess.offsetexists
-     * @param mixed $offset
+     * @param mixed $key
      * @return boolean
-     * @psalm-param array-key $offset
      */
     #[ReturnTypeWillChange]
-    public function offsetExists($offset)
+    public function offsetExists($key)
     {
-        return array_key_exists($offset, $this->info);
+        return array_key_exists($key, $this->info);
     }
 
     /**
      * Return the field's value from the collection information.
      *
      * @see https://php.net/arrayaccess.offsetget
-     * @param mixed $offset
+     * @param mixed $key
      * @return mixed
-     * @psalm-param array-key $offset
      */
     #[ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet($key)
     {
-        return $this->info[$offset];
+        return $this->info[$key];
     }
 
     /**
      * Not supported.
      *
      * @see https://php.net/arrayaccess.offsetset
-     * @param mixed $offset
+     * @param mixed $key
      * @param mixed $value
      * @throws BadMethodCallException
      * @return void
      */
     #[ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet($key, $value)
     {
         throw BadMethodCallException::classIsImmutable(self::class);
     }
@@ -190,12 +188,12 @@ class CollectionInfo implements ArrayAccess
      * Not supported.
      *
      * @see https://php.net/arrayaccess.offsetunset
-     * @param mixed $offset
+     * @param mixed $key
      * @throws BadMethodCallException
      * @return void
      */
     #[ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset($key)
     {
         throw BadMethodCallException::classIsImmutable(self::class);
     }

@@ -6,4 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Jenssegers\\Mongodb' => array($vendorDir . '/mongodb/laravel-mongodb/src'),
 );

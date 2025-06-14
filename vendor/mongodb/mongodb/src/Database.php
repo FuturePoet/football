@@ -32,7 +32,7 @@ use MongoDB\Exception\UnsupportedException;
 use MongoDB\GridFS\Bucket;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
-use MongoDB\Model\CollectionInfo;
+use MongoDB\Model\CollectionInfoIterator;
 use MongoDB\Operation\Aggregate;
 use MongoDB\Operation\CreateCollection;
 use MongoDB\Operation\CreateEncryptedCollection;
@@ -61,17 +61,23 @@ class Database
 
     private const WIRE_VERSION_FOR_READ_CONCERN_WITH_WRITE_STAGE = 8;
 
-    private string $databaseName;
+    /** @var string */
+    private $databaseName;
 
-    private Manager $manager;
+    /** @var Manager */
+    private $manager;
 
-    private ReadConcern $readConcern;
+    /** @var ReadConcern */
+    private $readConcern;
 
-    private ReadPreference $readPreference;
+    /** @var ReadPreference */
+    private $readPreference;
 
-    private array $typeMap;
+    /** @var array */
+    private $typeMap;
 
-    private WriteConcern $writeConcern;
+    /** @var WriteConcern */
+    private $writeConcern;
 
     /**
      * Constructs new Database instance.
@@ -282,7 +288,7 @@ class Database
             ? new CreateEncryptedCollection($this->databaseName, $collectionName, $options)
             : new CreateCollection($this->databaseName, $collectionName, $options);
 
-        $server = select_server_for_write($this->manager, $options);
+        $server = select_server($this->manager, $options);
 
         return $operation->execute($server);
     }
@@ -318,7 +324,7 @@ class Database
         }
 
         $operation = new CreateEncryptedCollection($this->databaseName, $collectionName, $options);
-        $server = select_server_for_write($this->manager, $options);
+        $server = select_server($this->manager, $options);
 
         try {
             $operation->createDataKeys($clientEncryption, $kmsProvider, $masterKey, $encryptedFields);
@@ -346,7 +352,7 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = select_server_for_write($this->manager, $options);
+        $server = select_server($this->manager, $options);
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -374,7 +380,7 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = select_server_for_write($this->manager, $options);
+        $server = select_server($this->manager, $options);
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -473,7 +479,7 @@ class Database
      * Returns information for all collections in this database.
      *
      * @see ListCollections::__construct() for supported options
-     * @return Iterator<int, CollectionInfo>
+     * @return CollectionInfoIterator
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
@@ -502,7 +508,7 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = select_server_for_write($this->manager, $options);
+        $server = select_server($this->manager, $options);
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -536,7 +542,7 @@ class Database
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = select_server_for_write($this->manager, $options);
+        $server = select_server($this->manager, $options);
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;

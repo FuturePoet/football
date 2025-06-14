@@ -19,13 +19,13 @@ namespace MongoDB\Model;
 
 use MongoDB\BSON\Serializable;
 use MongoDB\Exception\InvalidArgumentException;
-use stdClass;
 
+use function is_array;
 use function is_float;
 use function is_int;
+use function is_object;
 use function is_string;
 use function MongoDB\document_to_array;
-use function MongoDB\is_document;
 use function sprintf;
 
 /**
@@ -40,7 +40,8 @@ use function sprintf;
  */
 class IndexInput implements Serializable
 {
-    private array $index;
+    /** @var array */
+    private $index;
 
     /**
      * @param array $index Index specification
@@ -52,8 +53,8 @@ class IndexInput implements Serializable
             throw new InvalidArgumentException('Required "key" document is missing from index specification');
         }
 
-        if (! is_document($index['key'])) {
-            throw InvalidArgumentException::expectedDocumentType('"key" option', $index['key']);
+        if (! is_array($index['key']) && ! is_object($index['key'])) {
+            throw InvalidArgumentException::invalidType('"key" option', $index['key'], 'array or object');
         }
 
         foreach ($index['key'] as $fieldName => $order) {
@@ -87,9 +88,9 @@ class IndexInput implements Serializable
      * @see \MongoDB\Collection::createIndexes()
      * @see https://php.net/mongodb-bson-serializable.bsonserialize
      */
-    public function bsonSerialize(): stdClass
+    public function bsonSerialize(): array
     {
-        return (object) $this->index;
+        return $this->index;
     }
 
     /**

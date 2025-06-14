@@ -1,13 +1,18 @@
 <?php
-require 'vendor/autoload.php'; // Include Composer's autoloader
+require 'vendor/autoload.php';
 
-// MongoDB connection
-$client = new MongoDB\Client("mongodb://localhost:27017");
+use MongoDB\Client;
 
-// Select the database and collections
+// MongoDB Atlas connection string
+$client = new Client("mongodb+srv://husseinshaban1322:NENOo332003@cluster0.wqs8erb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+
+// Select the database
 $db = $client->livescore;
-$userCollection = $db->users;  // Collection for users
-$videoCollection = $db->Videos; // Collection for videos
-$premiumCollection = $db->premium; // Collection for premium subscriptions
-$matchesCollection = $db->matches; // Collection for matches
+
+// Define collections
+$userCollection = $db->users;
+$videoCollection = $db->Videos;
+$premiumCollection = $db->premium;
+$matchesCollection = $db->matches;
+$adminCollection = $db->admin;
 ?>

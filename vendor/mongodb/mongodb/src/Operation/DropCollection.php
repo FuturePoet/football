@@ -40,11 +40,14 @@ class DropCollection implements Executable
 {
     private const ERROR_CODE_NAMESPACE_NOT_FOUND = 26;
 
-    private string $databaseName;
+    /** @var string */
+    private $databaseName;
 
-    private string $collectionName;
+    /** @var string */
+    private $collectionName;
 
-    private array $options;
+    /** @var array */
+    private $options;
 
     /**
      * Constructs a drop command.

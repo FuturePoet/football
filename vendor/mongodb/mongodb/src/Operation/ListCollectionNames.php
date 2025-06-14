@@ -32,7 +32,8 @@ use MongoDB\Model\CallbackIterator;
  */
 class ListCollectionNames implements Executable
 {
-    private ListCollectionsCommand $listCollections;
+    /** @var ListCollectionsCommand */
+    private $listCollections;
 
     /**
      * Constructs a listCollections command.
@@ -75,7 +76,9 @@ class ListCollectionNames implements Executable
     {
         return new CallbackIterator(
             $this->listCollections->execute($server),
-            fn (array $collectionInfo): string => (string) $collectionInfo['name'],
+            function (array $collectionInfo) {
+                return $collectionInfo['name'];
+            }
         );
     }
 }

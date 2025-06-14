@@ -1,88 +1,58 @@
 {
-    "name": "mongodb/laravel-mongodb",
-    "description": "A MongoDB based Eloquent model and Query builder for Laravel",
+    "name": "jenssegers/mongodb",
+    "description": "A MongoDB based Eloquent model and Query builder for Laravel (Moloquent)",
     "keywords": [
         "laravel",
         "eloquent",
         "mongodb",
         "mongo",
         "database",
-        "model"
+        "model",
+        "moloquent"
     ],
-    "homepage": "https://github.com/mongodb/laravel-mongodb",
-    "support": {
-        "issues": "https://www.mongodb.com/support",
-        "security": "https://www.mongodb.com/security"
-    },
+    "homepage": "https://github.com/jenssegers/laravel-mongodb",
     "authors": [
-        { "name": "Andreas Braun", "email": "andreas.braun@mongodb.com", "role": "Leader" },
-        { "name": "Jérôme Tamarelle", "email": "jerome.tamarelle@mongodb.com", "role": "Maintainer" },
-        { "name": "Jeremy Mikola", "email": "jmikola@gmail.com", "role": "Maintainer" },
-        { "name": "Jens Segers", "homepage": "https://jenssegers.com", "role": "Creator" }
+        {
+            "name": "Jens Segers",
+            "homepage": "https://jenssegers.com"
+        }
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.1",
-        "ext-mongodb": "^1.15",
-        "composer-runtime-api": "^2.0.0",
-        "illuminate/cache": "^10.36|^11",
-        "illuminate/container": "^10.0|^11",
-        "illuminate/database": "^10.30|^11",
-        "illuminate/events": "^10.0|^11",
-        "illuminate/support": "^10.0|^11",
-        "mongodb/mongodb": "^1.18"
+        "illuminate/support": "^8.0",
+        "illuminate/container": "^8.0",
+        "illuminate/database": "^8.0",
+        "illuminate/events": "^8.0",
+        "mongodb/mongodb": "^1.6"
     },
     "require-dev": {
-        "mongodb/builder": "^0.2",
-        "league/flysystem-gridfs": "^3.28",
-        "league/flysystem-read-only": "^3.0",
-        "phpunit/phpunit": "^10.3",
-        "orchestra/testbench": "^8.0|^9.0",
-        "mockery/mockery": "^1.4.4",
-        "doctrine/coding-standard": "12.0.x-dev",
-        "spatie/laravel-query-builder": "^5.6",
-        "phpstan/phpstan": "^1.10",
-        "rector/rector": "^1.2"
-    },
-    "conflict": {
-        "illuminate/bus": "< 10.37.2"
-    },
-    "suggest": {
-        "league/flysystem-gridfs": "Filesystem storage in MongoDB with GridFS",
-        "mongodb/builder": "Provides a fluent aggregation builder for MongoDB pipelines"
-    },
-    "minimum-stability": "dev",
-    "replace": {
-        "jenssegers/mongodb": "self.version"
+        "phpunit/phpunit": "^9.0",
+        "orchestra/testbench": "^6.0",
+        "mockery/mockery": "^1.3.1",
+        "doctrine/dbal": "^2.6"
     },
     "autoload": {
-        "psr-4": {
-            "MongoDB\\Laravel\\": "src/"
+        "psr-0": {
+            "Jenssegers\\Mongodb": "src/"
         }
     },
     "autoload-dev": {
-        "psr-4": {
-            "MongoDB\\Laravel\\Tests\\": "tests/"
-        }
+        "classmap": [
+            "tests/TestCase.php",
+            "tests/models",
+            "tests/seeds"
+        ]
+    },
+    "suggest": {
+        "jenssegers/mongodb-session": "Add MongoDB session support to Laravel-MongoDB",
+        "jenssegers/mongodb-sentry": "Add Sentry support to Laravel-MongoDB"
     },
     "extra": {
         "laravel": {
             "providers": [
-                "MongoDB\\Laravel\\MongoDBServiceProvider",
-                "MongoDB\\Laravel\\MongoDBBusServiceProvider"
+                "Jenssegers\\Mongodb\\MongodbServiceProvider",
+                "Jenssegers\\Mongodb\\MongodbQueueServiceProvider"
             ]
-        }
-    },
-    "scripts": {
-        "test": "phpunit",
-        "test:coverage": "phpunit --coverage-clover ./coverage.xml",
-        "cs": "phpcs",
-        "cs:fix": "phpcbf",
-        "rector": "rector"
-    },
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }

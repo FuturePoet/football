@@ -28,10 +28,11 @@ use function array_intersect_key;
 use function hash_final;
 use function hash_init;
 use function hash_update;
+use function is_array;
 use function is_bool;
 use function is_integer;
+use function is_object;
 use function is_string;
-use function MongoDB\is_document;
 use function MongoDB\is_string_array;
 use function sprintf;
 use function strlen;
@@ -46,23 +47,32 @@ class WritableStream
 {
     private const DEFAULT_CHUNK_SIZE_BYTES = 261120;
 
-    private string $buffer = '';
+    /** @var string */
+    private $buffer = '';
 
-    private int $chunkOffset = 0;
+    /** @var integer */
+    private $chunkOffset = 0;
 
-    private int $chunkSize;
+    /** @var integer */
+    private $chunkSize;
 
-    private bool $disableMD5;
+    /** @var boolean */
+    private $disableMD5;
 
-    private CollectionWrapper $collectionWrapper;
+    /** @var CollectionWrapper */
+    private $collectionWrapper;
 
-    private array $file;
+    /** @var array */
+    private $file;
 
-    private ?HashContext $hashCtx = null;
+    /** @var HashContext|null */
+    private $hashCtx;
 
-    private bool $isClosed = false;
+    /** @var boolean */
+    private $isClosed = false;
 
-    private int $length = 0;
+    /** @var integer */
+    private $length = 0;
 
     /**
      * Constructs a writable GridFS stream.
@@ -120,8 +130,8 @@ class WritableStream
             throw InvalidArgumentException::invalidType('"contentType" option', $options['contentType'], 'string');
         }
 
-        if (isset($options['metadata']) && ! is_document($options['metadata'])) {
-            throw InvalidArgumentException::expectedDocumentType('"metadata" option', $options['metadata']);
+        if (isset($options['metadata']) && ! is_array($options['metadata']) && ! is_object($options['metadata'])) {
+            throw InvalidArgumentException::invalidType('"metadata" option', $options['metadata'], 'array or object');
         }
 
         $this->chunkSize = $options['chunkSizeBytes'];
@@ -136,8 +146,6 @@ class WritableStream
             '_id' => $options['_id'],
             'chunkSize' => $this->chunkSize,
             'filename' => $filename,
-            'length' => null,
-            'uploadDate' => null,
         ] + array_intersect_key($options, ['aliases' => 1, 'contentType' => 1, 'metadata' => 1]);
     }
 
@@ -276,7 +284,7 @@ class WritableStream
         $chunk = [
             'files_id' => $this->file['_id'],
             'n' => $this->chunkOffset,
-            'data' => new Binary($data),
+            'data' => new Binary($data, Binary::TYPE_GENERIC),
         ];
 
         if (! $this->disableMD5 && $this->hashCtx) {

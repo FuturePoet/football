@@ -17,13 +17,12 @@
 
 namespace MongoDB;
 
-use Composer\InstalledVersions;
 use Iterator;
+use Jean85\PrettyVersions;
 use MongoDB\Driver\ClientEncryption;
 use MongoDB\Driver\Exception\InvalidArgumentException as DriverInvalidArgumentException;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Manager;
-use MongoDB\Driver\Monitoring\Subscriber;
 use MongoDB\Driver\ReadConcern;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\Session;
@@ -33,7 +32,7 @@ use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 use MongoDB\Model\BSONArray;
 use MongoDB\Model\BSONDocument;
-use MongoDB\Model\DatabaseInfo;
+use MongoDB\Model\DatabaseInfoIterator;
 use MongoDB\Operation\DropDatabase;
 use MongoDB\Operation\ListDatabaseNames;
 use MongoDB\Operation\ListDatabases;
@@ -55,19 +54,26 @@ class Client
 
     private const HANDSHAKE_SEPARATOR = '/';
 
-    private static ?string $version = null;
+    /** @var string|null */
+    private static $version;
 
-    private Manager $manager;
+    /** @var Manager */
+    private $manager;
 
-    private ReadConcern $readConcern;
+    /** @var ReadConcern */
+    private $readConcern;
 
-    private ReadPreference $readPreference;
+    /** @var ReadPreference */
+    private $readPreference;
 
-    private string $uri;
+    /** @var string */
+    private $uri;
 
-    private array $typeMap;
+    /** @var array */
+    private $typeMap;
 
-    private WriteConcern $writeConcern;
+    /** @var WriteConcern */
+    private $writeConcern;
 
     /**
      * Constructs a new Client instance.
@@ -165,16 +171,6 @@ class Client
     }
 
     /**
-     * Registers a monitoring event subscriber with this Client's Manager
-     *
-     * @see Manager::addSubscriber()
-     */
-    final public function addSubscriber(Subscriber $subscriber): void
-    {
-        $this->manager->addSubscriber($subscriber);
-    }
-
-    /**
      * Returns a ClientEncryption instance for explicit encryption and decryption
      *
      * @param array $options Encryption options
@@ -211,7 +207,7 @@ class Client
             $options['typeMap'] = $this->typeMap;
         }
 
-        $server = select_server_for_write($this->manager, $options);
+        $server = select_server($this->manager, $options);
 
         if (! isset($options['writeConcern']) && ! is_in_transaction($options)) {
             $options['writeConcern'] = $this->writeConcern;
@@ -294,7 +290,7 @@ class Client
      * List databases.
      *
      * @see ListDatabases::__construct() for supported options
-     * @return Iterator<int, DatabaseInfo>
+     * @return DatabaseInfoIterator
      * @throws UnexpectedValueException if the command response was malformed
      * @throws InvalidArgumentException for parameter/option parsing errors
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
@@ -305,16 +301,6 @@ class Client
         $server = select_server($this->manager, $options);
 
         return $operation->execute($server);
-    }
-
-    /**
-     * Unregisters a monitoring event subscriber with this Client's Manager
-     *
-     * @see Manager::removeSubscriber()
-     */
-    final public function removeSubscriber(Subscriber $subscriber): void
-    {
-        $this->manager->removeSubscriber($subscriber);
     }
 
     /**
@@ -396,9 +382,9 @@ class Client
     {
         if (self::$version === null) {
             try {
-                self::$version = InstalledVersions::getPrettyVersion('mongodb/mongodb') ?? 'unknown';
+                self::$version = PrettyVersions::getVersion('mongodb/mongodb')->getPrettyVersion();
             } catch (Throwable $t) {
-                self::$version = 'error';
+                return 'unknown';
             }
         }
 

@@ -6,13 +6,10 @@ use Illuminate\Console\Command;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Connection;
 use Illuminate\Database\ConnectionResolverInterface;
-use Illuminate\Database\Events\MigrationsPruned;
 use Illuminate\Database\Events\SchemaDumped;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Config;
-use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'schema:dump')]
 class DumpCommand extends Command
 {
     /**
@@ -37,7 +34,7 @@ class DumpCommand extends Command
      *
      * @param  \Illuminate\Database\ConnectionResolverInterface  $connections
      * @param  \Illuminate\Contracts\Events\Dispatcher  $dispatcher
-     * @return void
+     * @return int
      */
     public function handle(ConnectionResolverInterface $connections, Dispatcher $dispatcher)
     {
@@ -49,19 +46,15 @@ class DumpCommand extends Command
 
         $dispatcher->dispatch(new SchemaDumped($connection, $path));
 
-        $info = 'Database schema dumped';
+        $this->info('Database schema dumped successfully.');
 
         if ($this->option('prune')) {
             (new Filesystem)->deleteDirectory(
-                $path = database_path('migrations'), $preserve = false
+                database_path('migrations'), $preserve = false
             );
 
-            $info .= ' and pruned';
-
-            $dispatcher->dispatch(new MigrationsPruned($connection, $path));
+            $this->info('Migrations pruned successfully.');
         }
-
-        $this->components->info($info.' successfully.');
     }
 
     /**
@@ -72,15 +65,11 @@ class DumpCommand extends Command
      */
     protected function schemaState(Connection $connection)
     {
-        $migrations = Config::get('database.migrations', 'migrations');
-
-        $migrationTable = is_array($migrations) ? ($migrations['table'] ?? 'migrations') : $migrations;
-
         return $connection->getSchemaState()
-            ->withMigrationTable($migrationTable)
-            ->handleOutputUsing(function ($type, $buffer) {
-                $this->output->write($buffer);
-            });
+                ->withMigrationTable($connection->getTablePrefix().Config::get('database.migrations', 'migrations'))
+                ->handleOutputUsing(function ($type, $buffer) {
+                    $this->output->write($buffer);
+                });
     }
 
     /**
@@ -90,7 +79,7 @@ class DumpCommand extends Command
      */
     protected function path(Connection $connection)
     {
-        return tap($this->option('path') ?: database_path('schema/'.$connection->getName().'-schema.sql'), function ($path) {
+        return tap($this->option('path') ?: database_path('schema/'.$connection->getName().'-schema.dump'), function ($path) {
             (new Filesystem)->ensureDirectoryExists(dirname($path));
         });
     }

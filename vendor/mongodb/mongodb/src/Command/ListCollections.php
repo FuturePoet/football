@@ -18,7 +18,6 @@
 namespace MongoDB\Command;
 
 use MongoDB\Driver\Command;
-use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Driver\Session;
@@ -26,9 +25,10 @@ use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\Model\CachingIterator;
 use MongoDB\Operation\Executable;
 
+use function is_array;
 use function is_bool;
 use function is_integer;
-use function MongoDB\is_document;
+use function is_object;
 
 /**
  * Wrapper for the listCollections command.
@@ -38,9 +38,11 @@ use function MongoDB\is_document;
  */
 class ListCollections implements Executable
 {
-    private string $databaseName;
+    /** @var string */
+    private $databaseName;
 
-    private array $options;
+    /** @var array */
+    private $options;
 
     /**
      * Constructs a listCollections command.
@@ -77,8 +79,8 @@ class ListCollections implements Executable
             throw InvalidArgumentException::invalidType('"authorizedCollections" option', $options['authorizedCollections'], 'boolean');
         }
 
-        if (isset($options['filter']) && ! is_document($options['filter'])) {
-            throw InvalidArgumentException::expectedDocumentType('"filter" option', $options['filter']);
+        if (isset($options['filter']) && ! is_array($options['filter']) && ! is_object($options['filter'])) {
+            throw InvalidArgumentException::invalidType('"filter" option', $options['filter'], 'array or object');
         }
 
         if (isset($options['maxTimeMS']) && ! is_integer($options['maxTimeMS'])) {
@@ -100,13 +102,11 @@ class ListCollections implements Executable
     /**
      * Execute the operation.
      *
-     * @return CachingIterator<int, array>
      * @see Executable::execute()
      * @throws DriverRuntimeException for other driver errors (e.g. connection errors)
      */
     public function execute(Server $server): CachingIterator
     {
-        /** @var Cursor<array> $cursor */
         $cursor = $server->executeReadCommand($this->databaseName, $this->createCommand(), $this->createOptions());
         $cursor->setTypeMap(['root' => 'array', 'document' => 'array']);
 

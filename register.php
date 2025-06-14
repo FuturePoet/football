@@ -1,5 +1,6 @@
 <?php
-require 'config.php'; // connection
+require 'config.php';
+$adminCollection = $db->admin;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];

@@ -35,7 +35,8 @@ use function array_column;
  */
 class ListDatabaseNames implements Executable
 {
-    private ListDatabasesCommand $listDatabases;
+    /** @var ListDatabasesCommand */
+    private $listDatabases;
 
     /**
      * Constructs a listDatabases command.

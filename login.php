@@ -1,13 +1,13 @@
 <?php
 session_start();
-require 'config.php'; // Ensure MongoDB connection is included
+require 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
     // Connect to the MongoDB collection
-    $userCollection = $client->livescore->users; // Change "myDatabase" to your actual database name
+    // $userCollection = $client->livescore->users; // Change "myDatabase" to your actual database name
 
     // Find user by username
     $user = $userCollection->findOne(['username' => $username]);

@@ -17,9 +17,8 @@
 
 namespace MongoDB\GridFS;
 
-use Iterator;
 use MongoDB\BSON\Binary;
-use MongoDB\Driver\CursorInterface;
+use MongoDB\Driver\Cursor;
 use MongoDB\Exception\InvalidArgumentException;
 use MongoDB\GridFS\Exception\CorruptFileException;
 
@@ -40,26 +39,35 @@ use function substr;
  */
 class ReadableStream
 {
-    private ?string $buffer = null;
+    /** @var string|null */
+    private $buffer;
 
-    private int $bufferOffset = 0;
+    /** @var integer */
+    private $bufferOffset = 0;
 
-    private int $chunkSize;
+    /** @var integer */
+    private $chunkSize;
 
-    private int $chunkOffset = 0;
+    /** @var integer */
+    private $chunkOffset = 0;
 
-    /** @var (CursorInterface&Iterator)|null */
-    private ?Iterator $chunksIterator = null;
+    /** @var Cursor|null */
+    private $chunksIterator;
 
-    private CollectionWrapper $collectionWrapper;
+    /** @var CollectionWrapper */
+    private $collectionWrapper;
 
-    private int $expectedLastChunkSize = 0;
+    /** @var integer */
+    private $expectedLastChunkSize = 0;
 
-    private object $file;
+    /** @var object */
+    private $file;
 
-    private int $length;
+    /** @var integer */
+    private $length;
 
-    private int $numChunks = 0;
+    /** @var integer */
+    private $numChunks = 0;
 
     /**
      * Constructs a readable GridFS stream.
@@ -98,6 +106,7 @@ class ReadableStream
      * Return internal properties for debugging purposes.
      *
      * @see https://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
+     * @return array
      */
     public function __debugInfo(): array
     {

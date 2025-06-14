@@ -17,6 +17,7 @@
 
 namespace MongoDB\Operation;
 
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Exception\RuntimeException as DriverRuntimeException;
 use MongoDB\Driver\Server;
 use MongoDB\Exception\InvalidArgumentException;
@@ -24,12 +25,13 @@ use MongoDB\Exception\UnexpectedValueException;
 use MongoDB\Exception\UnsupportedException;
 
 use function array_intersect_key;
+use function assert;
 use function count;
 use function current;
+use function is_array;
 use function is_float;
 use function is_integer;
 use function is_object;
-use function MongoDB\is_document;
 
 /**
  * Operation for obtaining an exact count of documents in a collection
@@ -39,18 +41,23 @@ use function MongoDB\is_document;
  */
 class CountDocuments implements Executable
 {
-    private string $databaseName;
+    /** @var string */
+    private $databaseName;
 
-    private string $collectionName;
+    /** @var string */
+    private $collectionName;
 
     /** @var array|object */
     private $filter;
 
-    private array $aggregateOptions;
+    /** @var array */
+    private $aggregateOptions;
 
-    private array $countOptions;
+    /** @var array */
+    private $countOptions;
 
-    private Aggregate $aggregate;
+    /** @var Aggregate */
+    private $aggregate;
 
     /**
      * Constructs an aggregate command for counting documents
@@ -89,8 +96,8 @@ class CountDocuments implements Executable
      */
     public function __construct(string $databaseName, string $collectionName, $filter, array $options = [])
     {
-        if (! is_document($filter)) {
-            throw InvalidArgumentException::expectedDocumentType('$filter', $filter);
+        if (! is_array($filter) && ! is_object($filter)) {
+            throw InvalidArgumentException::invalidType('$filter', $filter, 'array or object');
         }
 
         if (isset($options['limit']) && ! is_integer($options['limit'])) {
@@ -123,6 +130,7 @@ class CountDocuments implements Executable
     public function execute(Server $server)
     {
         $cursor = $this->aggregate->execute($server);
+        assert($cursor instanceof Cursor);
 
         $allResults = $cursor->toArray();
 

@@ -18,9 +18,8 @@
 namespace MongoDB\GridFS;
 
 use ArrayIterator;
-use Iterator;
 use MongoDB\Collection;
-use MongoDB\Driver\CursorInterface;
+use MongoDB\Driver\Cursor;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\ReadPreference;
 use MongoDB\Exception\InvalidArgumentException;
@@ -41,15 +40,20 @@ use function sprintf;
  */
 class CollectionWrapper
 {
-    private string $bucketName;
+    /** @var string */
+    private $bucketName;
 
-    private Collection $chunksCollection;
+    /** @var Collection */
+    private $chunksCollection;
 
-    private string $databaseName;
+    /** @var string */
+    private $databaseName;
 
-    private bool $checkedIndexes = false;
+    /** @var boolean */
+    private $checkedIndexes = false;
 
-    private Collection $filesCollection;
+    /** @var Collection */
+    private $filesCollection;
 
     /**
      * Constructs a GridFS collection wrapper.
@@ -81,29 +85,6 @@ class CollectionWrapper
     }
 
     /**
-     * Delete all GridFS files and chunks for a given filename.
-     */
-    public function deleteFileAndChunksByFilename(string $filename): ?int
-    {
-        /** @var iterable<array{_id: mixed}> $files */
-        $files = $this->findFiles(['filename' => $filename], [
-            'typeMap' => ['root' => 'array'],
-            'projection' => ['_id' => 1],
-        ]);
-
-        /** @var list<mixed> $ids */
-        $ids = [];
-        foreach ($files as $file) {
-            $ids[] = $file['_id'];
-        }
-
-        $count = $this->filesCollection->deleteMany(['_id' => ['$in' => $ids]])->getDeletedCount();
-        $this->chunksCollection->deleteMany(['files_id' => ['$in' => $ids]]);
-
-        return $count;
-    }
-
-    /**
      * Deletes a GridFS file and related chunks by ID.
      *
      * @param mixed $id
@@ -128,9 +109,8 @@ class CollectionWrapper
      *
      * @param mixed   $id        File ID
      * @param integer $fromChunk Starting chunk (inclusive)
-     * @return CursorInterface&Iterator
      */
-    public function findChunksByFileId($id, int $fromChunk = 0)
+    public function findChunksByFileId($id, int $fromChunk = 0): Cursor
     {
         return $this->chunksCollection->find(
             [
@@ -140,7 +120,7 @@ class CollectionWrapper
             [
                 'sort' => ['n' => 1],
                 'typeMap' => ['root' => 'stdClass'],
-            ],
+            ]
         );
     }
 
@@ -178,7 +158,7 @@ class CollectionWrapper
                 'skip' => $skip,
                 'sort' => ['uploadDate' => $sortOrder],
                 'typeMap' => ['root' => 'stdClass'],
-            ],
+            ]
         );
         assert(is_object($file) || $file === null);
 
@@ -194,7 +174,7 @@ class CollectionWrapper
     {
         $file = $this->filesCollection->findOne(
             ['_id' => $id],
-            ['typeMap' => ['root' => 'stdClass']],
+            ['typeMap' => ['root' => 'stdClass']]
         );
         assert(is_object($file) || $file === null);
 
@@ -207,7 +187,7 @@ class CollectionWrapper
      * @see Find::__construct() for supported options
      * @param array|object $filter  Query by which to filter documents
      * @param array        $options Additional options
-     * @return CursorInterface&Iterator
+     * @return Cursor
      */
     public function findFiles($filter, array $options = [])
     {
@@ -277,17 +257,6 @@ class CollectionWrapper
     }
 
     /**
-     * Updates the filename field in the file document for all the files with a given filename.
-     */
-    public function updateFilenameForFilename(string $filename, string $newFilename): ?int
-    {
-        return $this->filesCollection->updateMany(
-            ['filename' => $filename],
-            ['$set' => ['filename' => $newFilename]],
-        )->getMatchedCount();
-    }
-
-    /**
      * Updates the filename field in the file document for a given ID.
      *
      * @param mixed $id
@@ -296,7 +265,7 @@ class CollectionWrapper
     {
         return $this->filesCollection->updateOne(
             ['_id' => $id],
-            ['$set' => ['filename' => $filename]],
+            ['$set' => ['filename' => $filename]]
         );
     }
 

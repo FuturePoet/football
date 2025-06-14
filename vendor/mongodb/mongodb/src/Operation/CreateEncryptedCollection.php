@@ -30,7 +30,6 @@ use function array_key_exists;
 use function is_array;
 use function is_object;
 use function MongoDB\document_to_array;
-use function MongoDB\is_document;
 use function MongoDB\server_supports_feature;
 
 /**
@@ -52,18 +51,23 @@ class CreateEncryptedCollection implements Executable
 {
     private const WIRE_VERSION_FOR_QUERYABLE_ENCRYPTION_V2 = 21;
 
-    private CreateCollection $createCollection;
+    /** @var CreateCollection */
+    private $createCollection;
 
-    /** @var list<CreateCollection> */
-    private array $createMetadataCollections;
+    /** @var CreateCollection[] */
+    private $createMetadataCollections;
 
-    private CreateIndexes $createSafeContentIndex;
+    /** @var CreateIndexes */
+    private $createSafeContentIndex;
 
-    private string $databaseName;
+    /** @var string */
+    private $databaseName;
 
-    private string $collectionName;
+    /** @var string */
+    private $collectionName;
 
-    private array $options;
+    /** @var array */
+    private $options;
 
     /**
      * @see CreateCollection::__construct() for supported options
@@ -78,8 +82,8 @@ class CreateEncryptedCollection implements Executable
             throw new InvalidArgumentException('"encryptedFields" option is required');
         }
 
-        if (! is_document($options['encryptedFields'])) {
-            throw InvalidArgumentException::expectedDocumentType('"encryptedFields" option', $options['encryptedFields']);
+        if (! is_array($options['encryptedFields']) && ! is_object($options['encryptedFields'])) {
+            throw InvalidArgumentException::invalidType('"encryptedFields" option', $options['encryptedFields'], ['array', 'object']);
         }
 
         $this->createCollection = new CreateCollection($databaseName, $collectionName, $options);

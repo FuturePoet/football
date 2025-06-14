@@ -33,15 +33,13 @@ use function current;
  */
 class FindOne implements Executable, Explainable
 {
-    private Find $find;
+    /** @var Find */
+    private $find;
 
     /**
      * Constructs a find command for finding a single document.
      *
      * Supported options:
-     *
-     *  * codec (MongoDB\Codec\DocumentCodec): Codec used to decode documents
-     *    from BSON to PHP objects.
      *
      *  * collation (document): Collation specification.
      *
@@ -110,7 +108,7 @@ class FindOne implements Executable, Explainable
             $databaseName,
             $collectionName,
             $filter,
-            ['limit' => 1] + $options,
+            ['limit' => 1] + $options
         );
     }
 

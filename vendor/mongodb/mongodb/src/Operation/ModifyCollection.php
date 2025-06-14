@@ -35,13 +35,17 @@ use function is_array;
  */
 class ModifyCollection implements Executable
 {
-    private string $databaseName;
+    /** @var string */
+    private $databaseName;
 
-    private string $collectionName;
+    /** @var string */
+    private $collectionName;
 
-    private array $collectionOptions;
+    /** @var array */
+    private $collectionOptions;
 
-    private array $options;
+    /** @var array */
+    private $options;
 
     /**
      * Constructs a collMod command.

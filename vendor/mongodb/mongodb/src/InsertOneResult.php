@@ -25,12 +25,14 @@ use MongoDB\Exception\BadMethodCallException;
  */
 class InsertOneResult
 {
-    private WriteResult $writeResult;
+    /** @var WriteResult */
+    private $writeResult;
 
     /** @var mixed */
     private $insertedId;
 
-    private bool $isAcknowledged;
+    /** @var boolean */
+    private $isAcknowledged;
 
     /** @param mixed $insertedId */
     public function __construct(WriteResult $writeResult, $insertedId)

@@ -16,7 +16,8 @@ class WithTransaction
     /** @var callable */
     private $callback;
 
-    private array $transactionOptions;
+    /** @var array */
+    private $transactionOptions;
 
     /**
      * @see Session::startTransaction for supported transaction options

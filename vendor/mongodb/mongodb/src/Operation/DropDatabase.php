@@ -36,9 +36,11 @@ use function is_array;
  */
 class DropDatabase implements Executable
 {
-    private string $databaseName;
+    /** @var string */
+    private $databaseName;
 
-    private array $options;
+    /** @var array */
+    private $options;
 
     /**
      * Constructs a dropDatabase command.

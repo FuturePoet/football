@@ -285,12 +285,18 @@
         <p>Automatically detect goals and key moments in the match. This feature ensures that you never miss a crucial moment, providing real-time updates and highlights.</p>
             <video src="images/Goal_Detection_1.mp4" controls type="video/mp4"></video>
         </div>
+
+        <div class="section">
+        <h2> Ball out Detection</h2>
+        <p>Detect when the ball get out of the Field</p>
+            <video src="images/BallOut.mp4" controls type="video/mp4"></video>
+        </div>
         
-        <div class="section d-none">
+        <!-- <div class="section d-none">
         <h2>🚩 Offside Detection</h2>
         <p>Identify offsides in real-time using advanced AI models. This feature helps referees and viewers to make accurate decisions during the game.</p>
             <video src="uploads/FF.mp4" controls></video>
-        </div>
+        </div> -->
         
     </div>
   
@@ -331,21 +337,21 @@
                     <div class="container">
                         <div class="dropdown mb-3">
                             <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                All
+                                Detect Players
                             </button>
                             <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
-                                <li><a class="dropdown-item" href="#" data-model="All">All</a></li>
                                 <li><a class="dropdown-item" href="#" data-model="Players">Detect Players</a></li>
                                 <li><a class="dropdown-item" href="#" data-model="Teams">Classify Teams</a></li>
                                 <li><a class="dropdown-item" href="#" data-model="Offside">Offside Detection</a></li>
                                 <li><a class="dropdown-item" href="#" data-model="Goal">Goal Detection</a></li>
                                 <li><a class="dropdown-item" href="#" data-model="Hand">Hand Error Detection</a></li>
                                 <li><a class="dropdown-item" href="#" data-model="BallOut">Ball-out Detection</a></li>
+                                <li><a class="dropdown-item" href="#" data-model="All">All Models</a></li>
                             </ul>
                         </div>
                         <!-- Hidden input to store the selected value -->
                         <!-- <input type="hidden" id="selectedModel" name="selectedModel" value="Players"> -->
-                        <input type="hidden" id="liveSelectedModel" value="All">
+                        <input type="hidden" id="liveSelectedModel" value="Players">
                     </div>
                     
                     <video id="liveVideo" autoplay playsinline class="w-100 h-100 border" style="max-width: 640px; max-height: 480px; border: 1px solid #ccc;"></video>
@@ -427,7 +433,7 @@
         loading.classList.remove('d-flex');
         loading.style.display = 'none';
 
-        const apiUrl = "https://ff07-34-19-16-26.ngrok-free.app";
+        const apiUrl = "https://532d-35-221-177-2.ngrok-free.app";
 
         fileInput.addEventListener("change", function() {
             const file = this.files[0];
