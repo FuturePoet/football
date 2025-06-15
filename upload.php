@@ -314,52 +314,51 @@
 
     <section>
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-lg btn-dark border border-primary border-2 rounded-5 m-5" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        <button id="UploadBTN" type="button" class="btn btn-lg btn-dark border border-primary border-2 rounded-5 m-5" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
             Upload Video
         </button>
         <button id="LiveBTN" type="button" class="btn btn-lg btn-dark border border-primary border-2 rounded-5 m-5">
             Live Video
         </button>
-        <!-- <br>
-        <video id="liveVideo" autoplay playsinline style="width: 640px; height: 480px; border: 1px solid #ccc;"></video>
-        <canvas id="captureCanvas" style="display: none;"></canvas>
-        <img id="annotatedResult" style="margin-top: 10px; width: 640px; height: 480px;" /> -->
+        <button id="ScreenBTN" type="button" class="btn btn-lg btn-dark border border-primary border-2 rounded-5 m-5" data-bs-toggle="modal" data-bs-target="#screenModal" onclick="startScreenProcessing()">
+            Screen Detection
+        </button>
 
         <!-- Live Modal -->
         <div class="modal fade" id="liveModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content bg-dark">
-                <div class="modal-header text-white">
-                    <h5 class="modal-title" id="liveModalLabel">Live Player Detection</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="stopStreaming()"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <div class="container">
-                        <div class="dropdown mb-3">
-                            <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                Detect Players
-                            </button>
-                            <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
-                                <li><a class="dropdown-item" href="#" data-model="Players">Detect Players</a></li>
-                                <li><a class="dropdown-item" href="#" data-model="Teams">Classify Teams</a></li>
-                                <li><a class="dropdown-item" href="#" data-model="Offside">Offside Detection</a></li>
-                                <li><a class="dropdown-item" href="#" data-model="Goal">Goal Detection</a></li>
-                                <li><a class="dropdown-item" href="#" data-model="Hand">Hand Error Detection</a></li>
-                                <li><a class="dropdown-item" href="#" data-model="BallOut">Ball-out Detection</a></li>
-                                <li><a class="dropdown-item" href="#" data-model="All">All Models</a></li>
-                            </ul>
-                        </div>
-                        <!-- Hidden input to store the selected value -->
-                        <!-- <input type="hidden" id="selectedModel" name="selectedModel" value="Players"> -->
-                        <input type="hidden" id="liveSelectedModel" value="Players">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header text-white">
+                        <h5 class="modal-title" id="liveModalLabel">Live Player Detection</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="stopStreaming()"></button>
                     </div>
-                    
-                    <video id="liveVideo" autoplay playsinline class="w-100 h-100 border" style="max-width: 640px; max-height: 480px; border: 1px solid #ccc;"></video>
-                    <canvas id="captureCanvas" class="w-100 h-100 border" style="display: none;"></canvas>
-                    <img id="annotatedResult" class="w-100 h-100 border" style="margin-top: 10px; max-width: 640px; max-height: 480px;" />
+                    <div class="modal-body text-center">
+                        <div class="container">
+                            <div class="dropdown mb-3">
+                                <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Detect Players
+                                </button>
+                                <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="#" data-model="Players">Detect Players</a></li>
+                                    <li><a class="dropdown-item" href="#" data-model="Teams">Classify Teams</a></li>
+                                    <li><a class="dropdown-item" href="#" data-model="Offside">Offside Detection</a></li>
+                                    <li><a class="dropdown-item" href="#" data-model="Goal">Goal Detection</a></li>
+                                    <li><a class="dropdown-item" href="#" data-model="Hand">Hand Error Detection</a></li>
+                                    <li><a class="dropdown-item" href="#" data-model="BallOut">Ball-out Detection</a></li>
+                                    <li><a class="dropdown-item" href="#" data-model="All">All Models</a></li>
+                                </ul>
+                            </div>
+                            <!-- Hidden input to store the selected value -->
+                            <!-- <input type="hidden" id="selectedModel" name="selectedModel" value="Players"> -->
+                            <input type="hidden" id="liveSelectedModel" value="Players">
+                        </div>
+                        
+                        <video id="liveVideo" autoplay playsinline class="w-100 h-100 border" style="max-width: 640px; max-height: 480px; border: 1px solid #ccc;"></video>
+                        <canvas id="captureCanvas" class="w-100 h-100 border" style="display: none;"></canvas>
+                        <img id="annotatedResult" class="w-100 h-100 border" style="margin-top: 10px; max-width: 640px; max-height: 480px;" />
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
 
 
@@ -406,6 +405,42 @@
             </div>
         </div>
 
+        <!-- Screen Modal -->
+        <div class="modal fade" id="screenModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header text-white">
+                        <h5 class="modal-title">Screen Detection</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="stopScreenProcessing()"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="container">
+                        <div class="dropdown mb-3">
+                            <button class="btn btn-outline-primary dropdown-toggle w-100" type="button" id="screenModelDropdownBtn" data-bs-toggle="dropdown">
+                                Detect Players
+                            </button>
+                            <ul  class="dropdown-menu w-100">
+                            <li><a class="dropdown-item" href="#" data-model="Players">Detect Players</a></li>
+                            <li><a class="dropdown-item" href="#" data-model="Teams">Classify Teams</a></li>
+                            <li><a class="dropdown-item" href="#" data-model="Offside">Offside Detection</a></li>
+                            <li><a class="dropdown-item" href="#" data-model="Goal">Goal Detection</a></li>
+                            <li><a class="dropdown-item" href="#" data-model="Hand">Hand Error Detection</a></li>
+                            <li><a class="dropdown-item" href="#" data-model="BallOut">Ball-out Detection</a></li>
+                            <li><a class="dropdown-item" href="#" data-model="All">All Models</a></li>
+                            </ul>
+                        </div>
+
+                        <input type="hidden" id="screenModelSelect" value="Players">
+
+                        <video id="screenVideoElement" autoplay muted class="w-100 border" style="display:block; max-width: 640px; max-height: 480px; border: 1px solid #ccc;"></video>
+                        <canvas id="screenCanvas" class="w-100 border" style="display:none; margin-top: 10px; max-width: 640px; max-height: 480px;"></canvas>
+                        <img id="screenAnnotatedResult" class="w-100 border" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="toast align-items-center text-bg-danger border-0 position-fixed bottom-0 end-0 m-3" id="liveToast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body">
@@ -433,7 +468,8 @@
         loading.classList.remove('d-flex');
         loading.style.display = 'none';
 
-        const apiUrl = "https://532d-35-221-177-2.ngrok-free.app";
+        const apiUrl = "https://76b3-34-87-242-29.ngrok-free.app";
+        // const apiUrl = "Test";
 
         fileInput.addEventListener("change", function() {
             const file = this.files[0];
@@ -682,6 +718,130 @@
             clearInterval(frameInterval);
             streaming = false;
             liveVideoButton.innerText = "Live Video";
+        }
+
+
+
+
+        const screenVideo = document.getElementById('screenVideoElement');
+        const screenCanvas = document.getElementById('screenCanvas');
+        const screenCtx = screenCanvas.getContext('2d');
+        const screenResult = document.getElementById('screenAnnotatedResult');
+        const screenModelSelect = document.getElementById('screenModelSelect');
+        // let screenInterval = null;
+        let screenStreaming = false;
+
+        // Attach dropdown model change
+        // document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(item => {
+        //     item.addEventListener('click', e => {
+        //         e.preventDefault();
+        //         const selectedModel = item.getAttribute('data-model');
+        //         screenModelSelect.value = selectedModel;
+        //         document.getElementById('screenModelDropdownBtn').textContent = item.textContent;
+        //         console.log("Screen model changed to:", selectedModel);
+        //     });
+        // });
+
+        // Ensure dropdown works
+        document.querySelectorAll('.dropdown-menu .dropdown-item').forEach(item => {
+            item.addEventListener('click', e => {
+                e.preventDefault();
+                const selectedModel = item.getAttribute('data-model');
+                screenModelSelect.value = selectedModel;
+                document.getElementById('screenModelDropdownBtn').textContent = item.textContent;
+            });
+        });
+
+        // Stop everything when modal closes
+        document.getElementById('screenModal').addEventListener('hidden.bs.modal', () => {
+            if (screenStreaming) stopScreenProcessing();
+        });
+
+        async function startScreenProcessing() {
+            try {
+                const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                screenVideo.srcObject = stream;
+
+                // Wait until video is ready
+                await new Promise(resolve => {
+                    screenVideo.onloadedmetadata = () => {
+                        screenVideo.play();
+                        resolve();
+                    };
+                });
+
+                screenStreaming = true;
+
+                screenInterval = setInterval(async () => {
+                    if (screenVideo.readyState < 2) return;  // Not enough data
+
+                    screenCanvas.width = screenVideo.videoWidth;
+                    screenCanvas.height = screenVideo.videoHeight;
+                    screenCtx.drawImage(screenVideo, 0, 0);
+
+                    const blob = await new Promise(resolve =>
+                        screenCanvas.toBlob(resolve, 'image/jpeg')
+                    );
+
+                    const MT = document.getElementById('screenModelSelect').value;
+                    const MoTy = MT;
+                    console.log("Live Selected Model: ", MoTy);
+
+                    const formData = new FormData();
+                    formData.append('frame', blob);
+                    formData.append('type', MoTy);
+
+                    console.log("Sending frame to backend with model");
+
+                    const response = await fetch(`${apiUrl}/live_frame`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        try {
+                            const err = await response.json();
+                            console.error("Backend error:", err.error);
+                        } catch {
+                            console.error("Backend error (non-JSON):", await response.text());
+                        }
+                        return;
+                    }
+
+                    // console.log("Frame processed successfully");
+
+                    const annotatedBlob = await response.blob();
+                    screenResult.src = URL.createObjectURL(annotatedBlob);
+                }, 500);
+                // 1000 ms	1 FPS
+                // 500 ms	2 FPS
+                // 100 ms	10 FPS
+                // 50 ms	20 FPS
+                // 33 ms	30 FPS
+                // 20 ms	50 FPS
+                // 16 ms	60 FPS	(max screen refresh)
+
+            } catch (err) {
+                console.error('Screen capture failed:', err);
+                alert('Permission denied or screen capture failed.');
+                stopScreenProcessing();
+
+                const screenModal = bootstrap.Modal.getInstance(document.getElementById('screenModal'));
+                if (screenModal) screenModal.hide();
+            }
+        }
+
+        function stopScreenProcessing() {
+            clearInterval(screenInterval);
+            screenInterval = null;
+
+            const stream = screenVideo.srcObject;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                screenVideo.srcObject = null;
+            }
+
+            screenStreaming = false;
         }
 
 
