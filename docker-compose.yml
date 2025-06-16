@@ -1,21 +1,24 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  php-apache:
-    build: .
-    container_name: php_mongo_app
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - "8000:80"
-    volumes:
-      - .:/var/www/html
+      - "8000:8000"
     depends_on:
       - mongo
 
   mongo:
     image: mongo:6.0
-    container_name: mongo_db
-    ports:
-      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: rootpass
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: echo 'db.stats()' | mongo --username root --password rootpass --authenticationDatabase admin
+      interval: 10s
+      timeout: 5s
+      retries: 5        

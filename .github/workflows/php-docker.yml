@@ -18,21 +18,29 @@ jobs:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: rootpass
         options: >-
-          --health-cmd "mongosh --eval 'db.stats()'" 
+          --health-cmd "echo 'db.stats()' | mongo --username root --password rootpass --authenticationDatabase admin"
           --health-interval 10s 
           --health-timeout 5s 
           --health-retries 5
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-    - name: Build Docker image
-      run: docker-compose -f docker-compose.yml up --build -d
+      - name: Set up Docker Compose
+        run: sudo apt-get update && sudo apt-get install -y docker-compose
 
-    - name: Test PHP app (optional)
-      run: |
-        curl --retry 5 --retry-delay 5 --fail http://localhost:8000
+      - name: Build and run containers
+        run: docker-compose up -d --build
+
+      - name: Wait for app to be ready
+        run: |
+          echo "Waiting for app to be ready..."
+          sleep 10
+          curl --retry 5 --retry-delay 5 --fail http://localhost:8000 || exit 1
+
+      - name: Show running containers
+        run: docker ps -a
