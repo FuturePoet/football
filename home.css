@@ -58,22 +58,6 @@ body {
         .logout-button:hover {
             background-color: #c9302c;
         }
-        .navigation ul {
-            list-style-type: none;
-            padding: 10px;
-            margin: 10px;
-            display: flex;
-            justify-content: center;
-            font-weight: bold;
-            font-size:35px;
-            background-color: #101010;
-
-        }
-        .navigation ul li {
-            margin: 0 10px;
-            font-weight: bold;
-
-        }
         .navigation ul li a {
             text-decoration: none;
             color: #fffefe;
@@ -82,11 +66,15 @@ body {
             border-radius: 5px;
             transition: background-color 0.3s ease;
         }
-        .navigation ul li a:hover,
-        .navigation ul li a.active {
-            background: linear-gradient(135deg, #5d77c5, #ffb6a3, #0048ff);
-            color: #000000;
+        .navigation ul li a:hover{
+            background-color: rgb(100, 100, 100);
+            color:rgb(14, 14, 14);
         }
+        .navigation ul li a.active {
+            background:rgb(46, 127, 212);
+            color:rgb(255, 255, 255);
+        }
+    
         .content {
             display: flex;
             justify-content: space-between;

@@ -65,31 +65,37 @@
         }
         .navigation ul {
             list-style-type: none;
-            padding: 0;
-            text-align: center;
+            padding: 10px;
+            margin: 10px;
+            display: flex;
+            justify-content: center;
+            font-weight: bold;
+            font-size:35px;
+            background-color:rgb(100, 100, 100);
+
         }
         .navigation ul li {
-            display: inline;
             margin: 0 10px;
+            font-weight: bold;
+
         }
         .navigation ul li a {
-            color: #007bff;
             text-decoration: none;
-            font-weight: bold;
+            color: #fffefe;
+            font-size: 1.1rem;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
         }
-        .navigation ul li a:hover {
-            text-decoration: underline;
+        .navigation ul li a:hover{
+            background-color: rgb(100, 100, 100);
+            color:rgb(14, 14, 14);
         }
-        @keyframes colorChange {
-            0% { color: #007bff; }
-            25% { color: #ff5733; }
-            50% { color: #33ff57; }
-            75% { color: #3357ff; }
-            100% { color: #007bff; }
+        .navigation ul li a.active {
+            background:rgb(46, 127, 212);
+            color:rgb(255, 255, 255);
         }
-        .color-animation {
-            animation: colorChange 5s infinite;
-        }
+    
         .panel-body img{
             border-radius: 50%;
     width: 100px;
@@ -113,7 +119,7 @@
                 <li role="presentation"><a href="upload.php">Try our Model</a></li>
                 <li><a href="players.php">Players</a></li>
                 <li><a href="https://friendlychat-541c2.firebaseapp.com/">Fans Section</a></li>
-                <li><a href="contact.php">Contact Us</a></li>
+                <li><a href="contact.php" class="active">Contact Us</a></li>
             </ul>
         </div>
        

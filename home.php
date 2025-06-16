@@ -431,6 +431,12 @@ p {
     border-radius: 50%;
 }
 
+.hero-text {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+}
 
 body.dark-mode {
     background: #111;
