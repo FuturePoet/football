@@ -12,15 +12,16 @@ jobs:
 
     services:
       mongo:
-        image: mongo:6.0
-        ports: ['27017:27017']
+        image: mongo:7.0
+        ports:
+          - 27017:27017
         env:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: rootpass
         options: >-
-          --health-cmd "echo 'db.stats()' | mongo --username root --password rootpass --authenticationDatabase admin"
-          --health-interval 10s 
-          --health-timeout 5s 
+          --health-cmd "echo 'quit()' | mongo"
+          --health-interval 10s
+          --health-timeout 5s
           --health-retries 5
 
     steps:
